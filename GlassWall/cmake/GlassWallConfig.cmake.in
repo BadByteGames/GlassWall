@@ -1,0 +1,17 @@
+get_filename_component(GLASSWALL_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${GLASSWALL_CMAKE_DIR})
+
+find_package(SDL2 REQUIRED)
+find_package(glew REQUIRED)
+find_package(glm REQUIRED)
+
+find_package(OpenGL REQUIRED)
+list(REMOVE_AT CMAKE_MODULE_PATH -1)
+
+if(NOT TARGET JSONUtils::JSONUtils)
+    include("${GLASSWALL_CMAKE_DIR}/GlassWallTargets.cmake")
+endif()
+
+set(GLASSWALL_LIBS GlassWall::GlassWall)
