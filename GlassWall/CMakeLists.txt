@@ -1,10 +1,12 @@
 set(GLASSWALL_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h)
+set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
+							${GLASSWALL_DIR}/include/entity.h)
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
 
-set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp)
+set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
+				${GLASSWALL_DIR}/src/entity.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 
