@@ -1,8 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <settings.h>
 
 namespace GW {
+	namespace RenderEngine{
+		class Window;
+	}
+
 	class Entity;
 
 	class World {
@@ -32,5 +37,8 @@ namespace GW {
 
 		bool m_requestQuit;
 		bool m_worldStarted;
+
+		//window of game
+		RenderEngine::Window* m_window;
 	};
 }

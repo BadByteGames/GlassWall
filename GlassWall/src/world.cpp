@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <entity.h>
+#include <renderengine.h>
+#include <window.h>
 
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false)
@@ -14,6 +16,13 @@ namespace GW {
 
 	void World::start()
 	{
+		//initialize rendering
+		RenderEngine::init();
+
+		//create a window
+		m_window = new RenderEngine::Window();
+		m_window->create("Filler Text", 640, 480, 0);
+
 		//trigger all the entity world start events
 		for (auto ent : m_entities) {
 			ent->onWorldStart();
@@ -33,6 +42,10 @@ namespace GW {
 		for (auto ent : m_entities) {
 			ent->cleanUp();
 		}
+
+		//cleanup renderengine
+		m_window->destroy();
+		delete m_window;
 
 		//don't delete entities managed by user
 	}

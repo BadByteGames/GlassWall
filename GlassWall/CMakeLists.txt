@@ -6,7 +6,9 @@ set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
 
 set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
-				${GLASSWALL_DIR}/src/entity.cpp)
+				${GLASSWALL_DIR}/src/entity.cpp
+				${GLASSWALL_DIR}/src/window.cpp
+				${GLASSWALL_DIR}/src/renderengine.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 
@@ -18,7 +20,15 @@ target_include_directories(GlassWall
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+		${SDL2_INCLUDE_DIR}
+		${GLEW_INCLUDE_DIR}
 )
+
+target_link_libraries(GlassWall 
+PUBLIC
+	SDL2::SDL2 
+	SDL2::SDL2main
+	${GLEW_LIBRARIES})
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)
 
