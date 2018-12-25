@@ -1,6 +1,7 @@
 #include <window.h>
 #include <SDL.h>
 #include <settings.h>
+#include <GL/glew.h>
 
 GW::RenderEngine::Window::Window()
 {
@@ -28,6 +29,12 @@ void GW::RenderEngine::Window::create(std::string name, int width, int height, u
 	m_window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
 
 	SDL_GL_CreateContext(m_window);
+}
+
+void GW::RenderEngine::Window::clear(float r, float g, float b, float a)
+{
+	glClearColor(r, g, b, a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GW::RenderEngine::Window::swapBuffers()

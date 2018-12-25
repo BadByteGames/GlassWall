@@ -28,6 +28,7 @@ target_link_libraries(GlassWall
 PUBLIC
 	SDL2::SDL2 
 	SDL2::SDL2main
+	${OPENGL_gl_LIBRARY}
 	${GLEW_LIBRARIES})
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)
