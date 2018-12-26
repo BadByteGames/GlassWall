@@ -7,7 +7,7 @@
 #include <SDL.h>
 
 namespace GW {
-	World::World() : m_requestQuit(false), m_worldStarted(false)
+	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
 	}
 
@@ -22,7 +22,7 @@ namespace GW {
 
 		//create a window
 		m_window = new RenderEngine::Window();
-		m_window->create("Filler Text", 640, 480, 0);
+		m_window->create("Filler Text", 640, 480, m_windowFlags);
 
 		//init glew
 		RenderEngine::initGL();
@@ -36,6 +36,8 @@ namespace GW {
 		for (auto ent : m_entities) {
 			ent->entityStart();
 		}
+
+		m_worldStarted = true;
 
 		while (!m_requestQuit) {
 			//clear the window
@@ -76,6 +78,31 @@ namespace GW {
 
 		//init entity if world already started
 		entity->entityStart();
+	}
+
+	void World::setWindowFullscreen(bool value)
+	{
+		if (m_worldStarted) {
+			m_window->setFullscreen(value);
+		}
+		else {
+			m_windowFlags ^= (-(value ? 1 : 0)) & WINDOWFLAGS::FULLSCREEN;
+		}
+	}
+
+	void World::setWindowBorderless(bool value)
+	{
+		m_window->setBorderless(value);
+	}
+
+	void World::setWindowResizable(bool value)
+	{
+		m_window->setResizable(value);
+	}
+
+	void World::setWindowFlags(unsigned int value)
+	{
+		m_windowFlags = value;
 	}
 
 	void World::update()

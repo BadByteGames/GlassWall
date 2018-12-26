@@ -30,10 +30,24 @@ namespace GW {
 		*/
 		void requestQuit() { m_requestQuit = true; }
 
+		//set the window to fullscreen
+		void setWindowFullscreen(bool value);
+
+		//set the window to be borderless
+		void setWindowBorderless(bool value);
+
+		//set the window to resize
+		void setWindowResizable(bool value);
+
+		//set window flags PRIOR to start()
+		void setWindowFlags(unsigned int value);
+
 	private:
 		void update();
 
 		std::vector<Entity*> m_entities;
+
+		unsigned int m_windowFlags;
 
 		bool m_requestQuit;
 		bool m_worldStarted;

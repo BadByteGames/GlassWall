@@ -13,6 +13,15 @@ namespace GW {
 			//creates the initial window
 			void create(std::string name, int width, int height, unsigned int flags);
 
+			//set window fullscreen state
+			void setFullscreen(bool value);
+
+			//set window bordered mode
+			void setBorderless(bool value);
+
+			//set window resizable
+			void setResizable(bool value);
+			
 			/*call to clear a window at beginning of frame
 			*rgba is on a scale of 0.0-1.0
 			*/
@@ -24,7 +33,7 @@ namespace GW {
 			//call to clean up internal variables
 			void destroy();
 		private:
-			SDL_Window* m_window;
+			SDL_Window* m_window = nullptr;
 		};
 	}
 }

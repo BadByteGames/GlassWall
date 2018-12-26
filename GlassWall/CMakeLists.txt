@@ -22,6 +22,7 @@ target_include_directories(GlassWall
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 		${SDL2_INCLUDE_DIR}
 		${GLEW_INCLUDE_DIR}
+		${GLM_INCLUDE_DIR}
 )
 
 target_link_libraries(GlassWall 
