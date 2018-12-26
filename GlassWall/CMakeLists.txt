@@ -8,7 +8,8 @@ include(GNUInstallDirs)
 set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/entity.cpp
 				${GLASSWALL_DIR}/src/window.cpp
-				${GLASSWALL_DIR}/src/renderengine.cpp)
+				${GLASSWALL_DIR}/src/renderengine.cpp
+				${GLASSWALL_DIR}/src/shaderprogram.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 
