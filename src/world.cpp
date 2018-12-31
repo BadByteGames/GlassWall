@@ -40,8 +40,8 @@ namespace GW {
 		m_worldStarted = true;
 
 		while (!m_requestQuit) {
-			//clear the window
-			m_window->clear(1.0f, 0.0f, 0.0f);
+			//clear the window to black
+			m_window->clear(0.0f, 0.0f, 0.0f);
 
 			//update the world until stopped
 			update();
