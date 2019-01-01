@@ -5,6 +5,11 @@
 #include <iostream>
 #include <GL/glew.h>
 
+//default shader source to use including enough to render textures
+//no advanced effects
+const char* defaultVert = R"(#version 130)";
+
+const char* defaultFrag = R"(#version 130)";
 
 namespace GW {
 	namespace RenderEngine {

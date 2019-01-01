@@ -15,6 +15,7 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/settings.h
 							${GLASSWALL_DIR}/include/shaderprogram.h
 							${GLASSWALL_DIR}/include/model.h)
+
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
 

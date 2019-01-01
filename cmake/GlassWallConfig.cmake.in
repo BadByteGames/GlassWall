@@ -10,7 +10,7 @@ find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
 list(REMOVE_AT CMAKE_MODULE_PATH -1)
 
-if(NOT TARGET JSONUtils::JSONUtils)
+if(NOT TARGET GlassWall::GlassWall)
     include("${GLASSWALL_CMAKE_DIR}/GlassWallTargets.cmake")
 endif()
 

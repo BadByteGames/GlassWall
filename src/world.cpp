@@ -5,6 +5,7 @@
 #include <renderengine.h>
 #include <window.h>
 #include <SDL.h>
+#include <model.h>
 
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
@@ -55,6 +56,11 @@ namespace GW {
 				}
 			}
 
+			//draw entity models
+			for (auto ent : m_entities) {
+				ent->m_model->draw();
+			}
+
 			//swap buffers
 			m_window->swapBuffers();
 		}
@@ -77,7 +83,9 @@ namespace GW {
 		m_entities.push_back(entity);
 
 		//init entity if world already started
-		entity->entityStart();
+		if (m_worldStarted) {
+			entity->entityStart();
+		}
 	}
 
 	void World::setWindowFullscreen(bool value)

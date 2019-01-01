@@ -1,7 +1,5 @@
 #include <string>
-
-typedef unsigned int GLuint;
-typedef unsigned int GLenum;
+#include <GL/glew.h>
 
 namespace GW {
 	namespace RenderEngine {
