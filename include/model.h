@@ -19,13 +19,12 @@ namespace GW {
 		};
 
 		struct Color {
-			Color(): r(0), g(0), b(0), a(0) {}
-			Color(GLubyte r, GLubyte g, GLubyte b) : r(r), g(g), b(b), a(255) {}
-			Color(GLubyte r, GLubyte g, GLubyte b, GLubyte a): r(r), g(g), b(b), a(a) {}
+			Color(): r(0), g(0), b(0) {}
+			Color(GLubyte r, GLubyte g, GLubyte b) : r(r), g(g), b(b) {}
+			Color(GLubyte r, GLubyte g, GLubyte b, GLubyte a): r(r), g(g), b(b) {}
 			GLubyte r;
 			GLubyte g;
 			GLubyte b;
-			GLubyte a;
 		};
 
 		struct Vertex {

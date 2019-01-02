@@ -13,7 +13,7 @@ public:
 	virtual void entityStart() {
 		//compile shaders on entity start
 		m_shader.compileShadersFromFile("debug.vert", "debug.frag");
-		
+
 		//init the model
 		m_model = new GW::RenderEngine::Model();
 

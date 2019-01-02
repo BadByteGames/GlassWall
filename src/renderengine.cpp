@@ -26,11 +26,12 @@ void GW::RenderEngine::initGL()
 		std::cout << "glew Initialized" << std::endl;
 	}
 
-	//init alpha blending
-	glEnable(GL_BLEND);
-
 	//init depth for 3D
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	//init alpha blending
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

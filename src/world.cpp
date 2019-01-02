@@ -23,7 +23,7 @@ namespace GW {
 
 		//create a window
 		m_window = new RenderEngine::Window();
-		m_window->create("Filler Text", 640, 480, m_windowFlags);
+		m_window->create("Filler Text", 1280, 720, m_windowFlags);
 
 		//init glew
 		RenderEngine::initGL();
