@@ -30,12 +30,12 @@ void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 void GW::RenderEngine::Model::test()
 {
 	//fill up the model with some test data
-	m_vertices.push_back({ {0.5f, 0.5f, -1.0f}, {255, 0, 0} });
-	m_vertices.push_back({ { 0.5f, -0.5f, -1.0f }, {255, 0, 0 }});
-	m_vertices.push_back({ { -0.5f, -0.5f, -1.0f }, {255, 0, 0 }});
-	m_vertices.push_back({ {0.5f, 0.5f, -1.0f}, {255, 0, 0} });
-	m_vertices.push_back({ { -0.5f, 0.5f, -1.0f }, {255, 0, 0 } });
-	m_vertices.push_back({ { -0.5f, -0.5f, -1.0f }, {255, 0, 0 } });
+	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, {255, 0, 0} });
+	m_vertices.push_back({ { 0.5f, -0.5f, -10.0f }, {255, 0, 0 }});
+	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, {255, 0, 0 }});
+	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, {255, 0, 0} });
+	m_vertices.push_back({ { -0.5f, 0.5f, -10.0f }, {255, 0, 0 } });
+	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, {255, 0, 0 } });
 
 	//generate a vbo
 	if (m_vbo == 0) {
@@ -108,7 +108,7 @@ void GW::RenderEngine::Model::draw()
 
 	if (mvpUniform != -1) {
 		//glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getViewMatrix() * m_world->getCamera()->getProjectionMatrix()));
+		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix()));
 	}
 	//draw shapes
 	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());

@@ -30,7 +30,6 @@ namespace GW {
 		//init glew
 		RenderEngine::initGL();
 
-		m_camera->setTargetLock(true);
 		m_camera->setDimensions(1280, 720);
 
 		//trigger all the entity world start events
@@ -54,8 +53,6 @@ namespace GW {
 
 			//update the world until stopped
 			update();
-
-			m_camera->update();
 
 			//quick hack for handling SDL Input
 			//TODO: Replace with actual input system

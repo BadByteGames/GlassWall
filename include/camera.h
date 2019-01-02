@@ -31,10 +31,7 @@ namespace GW{
 			void setOrthopgraphic(const bool& value);
 
 			//should target not be calculated every frame
-			void setTargetLock(const bool& value);
-
-			//update targets
-			void update();
+			void useTarget(const bool& value);
 
 			//set window dimensions
 			void setDimensions(const int& width, const int& height);

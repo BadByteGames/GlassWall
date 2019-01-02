@@ -1,5 +1,6 @@
 #include "camera.h"
 
+#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 const float PI = 3.14159265359f;
 
@@ -15,7 +16,7 @@ GW::RenderEngine::Camera::Camera()
 
 	m_width = 1920;
 	m_height = 1080;
-	m_fov = 60.0f;
+	m_fov = (60.0f * PI) / 180.0f;
 }
 
 GW::RenderEngine::Camera::~Camera()
@@ -52,28 +53,9 @@ void GW::RenderEngine::Camera::setOrthopgraphic(const bool & value)
 	m_orthographic = value;
 }
 
-void GW::RenderEngine::Camera::setTargetLock(const bool & value)
+void GW::RenderEngine::Camera::useTarget(const bool & value)
 {
 	m_lookat = value;
-}
-
-void GW::RenderEngine::Camera::update()
-{
-	//only update if not in m_lookat mode
-	if (!m_lookat) {
-		m_target.x = cos(m_rotations.x) * sin(m_rotations.y);
-		m_target.y = cos(m_rotations.x) * cos(m_rotations.y);
-		m_target.z = sin(m_rotations.x);
-		
-		//add in location
-		m_target += m_position;
-
-		m_up.x = cos(m_rotations.x + (90.0f * PI) / 180.0f) * sin(m_rotations.z);
-		m_up.y = cos(m_rotations.x + (90.0f * PI) / 180.0f) * cos(m_rotations.z);
-		m_up.z = sin(m_rotations.x + (90.0f * PI) / 180.0f);
-
-		m_up += m_position;
-	}
 }
 
 void GW::RenderEngine::Camera::setDimensions(const int & width, const int & height)
@@ -84,8 +66,18 @@ void GW::RenderEngine::Camera::setDimensions(const int & width, const int & heig
 
 glm::mat4 GW::RenderEngine::Camera::getViewMatrix()
 {
-	glm::mat4 viewMatrix = glm::lookAt(m_position, m_target, m_up);
-	
+	glm::mat4 viewMatrix = glm::mat4(1.0f);
+
+	if (m_lookat) {
+		viewMatrix = glm::lookAt(m_position, m_target, m_up);
+	}
+	else {
+		viewMatrix = glm::rotate(viewMatrix, m_rotations.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, m_rotations.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, m_rotations.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		viewMatrix = glm::translate(viewMatrix, -m_position);
+	}
+
 	return viewMatrix;
 }
 
@@ -93,7 +85,7 @@ glm::mat4 GW::RenderEngine::Camera::getProjectionMatrix()
 {
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	float aspectRatio = (float)m_width / (float)m_height;
+	float aspectRatio = ((float)m_width) / ((float)m_height);
 
 	if (m_orthographic) {
 		projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, 0.1f, 1000.0f);

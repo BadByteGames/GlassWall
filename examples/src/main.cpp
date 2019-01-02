@@ -3,6 +3,7 @@
 #include <iostream>
 #include <model.h>
 #include <shaderprogram.h>
+#include <camera.h>
 
 using GW::RenderEngine::ShaderProgram;
 
@@ -22,6 +23,7 @@ public:
 
 		//set active shader of model
 		m_model->useShader(m_shader);
+		m_world->getCamera()->setOrthopgraphic(true);
 	}
 
 	virtual void update() {
@@ -29,6 +31,10 @@ public:
 			std::cout << "Screw you! I'm leaving!" << std::endl;
 			m_saidScrewYou = true;
 		}
+		m_rotationY += 0.1f;
+		if (m_rotationY > 360.0f)
+			m_rotationY = 0.0f;
+		m_world->getCamera()->setRotation(0.0f, m_rotationY, 0.0f);
 		//m_world->requestQuit();
 	}
 
@@ -40,7 +46,10 @@ public:
 		
 		delete m_model;
 	}
+
 private:
+	float m_rotationY = 0.0f;
+
 	bool m_saidScrewYou = false;
 	ShaderProgram m_shader;
 };
