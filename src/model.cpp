@@ -1,6 +1,10 @@
 #include <model.h>
 #include <shaderprogram.h>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <world.h>
+#include <camera.h>
 
 GW::RenderEngine::Model::Model()
 {
@@ -55,6 +59,11 @@ void GW::RenderEngine::Model::cleanUp()
 	}
 }
 
+void GW::RenderEngine::Model::setWorld(GW::World * world)
+{
+	m_world = world;
+}
+
 void GW::RenderEngine::Model::draw()
 {
 	//start using shader
@@ -67,6 +76,12 @@ void GW::RenderEngine::Model::draw()
 	GLint positionAttrib = glGetAttribLocation(m_program, "in_position");
 	GLint colorAttrib = glGetAttribLocation(m_program, "in_color");
 	
+	//get program uniforms
+	GLint modelUniform = glGetUniformLocation(m_program, "model");
+	GLint viewUniform = glGetUniformLocation(m_program, "view");
+	GLint projectionUniform = glGetUniformLocation(m_program, "projection");
+	GLint mvpUniform = glGetUniformLocation(m_program, "mvp");
+
 	//enable attributes as needed
 	if (positionAttrib != -1) {
 		glEnableVertexAttribArray(positionAttrib);
@@ -78,6 +93,23 @@ void GW::RenderEngine::Model::draw()
 		glVertexAttribPointer(colorAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 	}
 
+	//set uniforms to proper values
+	if (modelUniform != -1) {
+		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+	}
+
+	if (viewUniform != -1) {
+		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getViewMatrix()));
+	}
+
+	if (projectionUniform != -1) {
+		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix()));
+	}
+
+	if (mvpUniform != -1) {
+		//glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getViewMatrix() * m_world->getCamera()->getProjectionMatrix()));
+	}
 	//draw shapes
 	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
 

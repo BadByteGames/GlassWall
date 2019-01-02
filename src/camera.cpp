@@ -8,6 +8,7 @@ GW::RenderEngine::Camera::Camera()
 	m_position = glm::vec3(0.0f);
 	m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_target = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_rotations = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	m_orthographic = false;
 	m_lookat = false;
@@ -49,6 +50,11 @@ void GW::RenderEngine::Camera::setUpVector(const glm::vec3 & up)
 void GW::RenderEngine::Camera::setOrthopgraphic(const bool & value)
 {
 	m_orthographic = value;
+}
+
+void GW::RenderEngine::Camera::setTargetLock(const bool & value)
+{
+	m_lookat = value;
 }
 
 void GW::RenderEngine::Camera::update()

@@ -6,6 +6,7 @@
 namespace GW {
 	namespace RenderEngine{
 		class Window;
+		class Camera;
 	}
 
 	class Entity;
@@ -42,6 +43,8 @@ namespace GW {
 		//set window flags PRIOR to start()
 		void setWindowFlags(unsigned int value);
 
+		//get a reference to the camera
+		RenderEngine::Camera* getCamera();
 	private:
 		void update();
 
@@ -54,5 +57,8 @@ namespace GW {
 
 		//window of game
 		RenderEngine::Window* m_window;
+
+		//currently active camera
+		RenderEngine::Camera* m_camera;
 	};
 }

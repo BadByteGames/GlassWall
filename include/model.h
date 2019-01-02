@@ -53,6 +53,9 @@ namespace GW {
 
 			//clean up internals
 			void cleanUp();
+
+			//set world rules
+			void setWorld(GW::World* world);
 		private:
 			//deals with drawing the files during rendering
 			void draw();
@@ -65,6 +68,9 @@ namespace GW {
 
 			//vbo id
 			GLuint m_vbo;
+
+			//refrence to world
+			GW::World* m_world;
 
 			friend class GW::World;
 		};

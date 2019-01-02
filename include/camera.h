@@ -30,6 +30,9 @@ namespace GW{
 			*/
 			void setOrthopgraphic(const bool& value);
 
+			//should target not be calculated every frame
+			void setTargetLock(const bool& value);
+
 			//update targets
 			void update();
 
