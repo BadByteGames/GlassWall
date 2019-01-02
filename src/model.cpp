@@ -25,11 +25,13 @@ void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 
 void GW::RenderEngine::Model::test()
 {
-
 	//fill up the model with some test data
 	m_vertices.push_back({ {0.5f, 0.5f, -1.0f}, {255, 0, 0} });
-	m_vertices.push_back({ { 0.5f, 0.0f, -1.0f }, {255, 0, 0 }});
-	m_vertices.push_back({ { 0.0f, 0.0f, -1.0f }, {255, 0, 0 }});
+	m_vertices.push_back({ { 0.5f, -0.5f, -1.0f }, {255, 0, 0 }});
+	m_vertices.push_back({ { -0.5f, -0.5f, -1.0f }, {255, 0, 0 }});
+	m_vertices.push_back({ {0.5f, 0.5f, -1.0f}, {255, 0, 0} });
+	m_vertices.push_back({ { -0.5f, 0.5f, -1.0f }, {255, 0, 0 } });
+	m_vertices.push_back({ { -0.5f, -0.5f, -1.0f }, {255, 0, 0 } });
 
 	//generate a vbo
 	if (m_vbo == 0) {
@@ -73,7 +75,7 @@ void GW::RenderEngine::Model::draw()
 
 	if (positionAttrib != -1) {
 		glEnableVertexAttribArray(colorAttrib);
-		glVertexAttribPointer(colorAttrib, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+		glVertexAttribPointer(colorAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 	}
 
 	//draw shapes

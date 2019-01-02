@@ -1,3 +1,5 @@
+#pragma once
+
 //This file contains enumerators that are PUBLICLY used by the user
 namespace GW {
 
