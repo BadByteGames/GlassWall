@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <world.h>
 #include <camera.h>
+#include <textures.h>
+#include <string>
 
 GW::RenderEngine::Model::Model()
 {
@@ -30,12 +32,12 @@ void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 void GW::RenderEngine::Model::test()
 {
 	//fill up the model with some test data
-	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, {255, 0, 0} });
-	m_vertices.push_back({ { 0.5f, -0.5f, -10.0f }, {255, 0, 0 }});
-	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, {255, 0, 0 }});
-	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, {255, 0, 0} });
-	m_vertices.push_back({ { -0.5f, 0.5f, -10.0f }, {255, 0, 0 } });
-	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, {255, 0, 0 } });
+	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, WHITE, {1.0f, 1.0f} });
+	m_vertices.push_back({ { 0.5f, -0.5f, -10.0f }, WHITE, {1.0f, 0.0f} });
+	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, WHITE, {0.0f, 0.0f} });
+	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, WHITE, { 1.0f, 1.0f } });
+	m_vertices.push_back({ { -0.5f, 0.5f, -10.0f }, WHITE, {0.0f, 1.0f} });
+	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, WHITE, {0.0f, 0.0f} });
 
 	//generate a vbo
 	if (m_vbo == 0) {
@@ -75,6 +77,7 @@ void GW::RenderEngine::Model::draw()
 	//get all attribs
 	GLint positionAttrib = glGetAttribLocation(m_program, "in_position");
 	GLint colorAttrib = glGetAttribLocation(m_program, "in_color");
+	GLint uvAttrib = glGetAttribLocation(m_program, "in_uv");
 	
 	//get program uniforms
 	GLint modelUniform = glGetUniformLocation(m_program, "model");
@@ -88,9 +91,14 @@ void GW::RenderEngine::Model::draw()
 		glVertexAttribPointer(positionAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 	}
 
-	if (positionAttrib != -1) {
+	if (colorAttrib != -1) {
 		glEnableVertexAttribArray(colorAttrib);
 		glVertexAttribPointer(colorAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+	}
+
+	if (uvAttrib != -1) {
+		glEnableVertexAttribArray(uvAttrib);
+		glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 	}
 
 	//set uniforms to proper values
@@ -107,11 +115,19 @@ void GW::RenderEngine::Model::draw()
 	}
 
 	if (mvpUniform != -1) {
-		//glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix()));
 	}
+
+	//set all sampler2D values
+	for (unsigned int i = 0; i < 16; i++) {
+		GLint samplerLocation = glGetUniformLocation(m_program, std::string("textureSlot" + std::to_string(i)).c_str());
+		if (samplerLocation != -1) {
+			glUniform1i(samplerLocation, i);
+		}
+	}
+
 	//draw shapes
-	glDrawArrays(GL_TRIANGLES, 0, m_vertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m_vertices.size());
 
 	//disable attributes as needed
 	if (positionAttrib != -1) {

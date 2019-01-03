@@ -4,9 +4,10 @@
 #include <model.h>
 #include <shaderprogram.h>
 #include <camera.h>
+#include <textures.h>
 
 using GW::RenderEngine::ShaderProgram;
-
+using GW::RenderEngine::Textures;
 class OneLiner : public GW::Entity {
 public:
 	using GW::Entity::Entity;
@@ -23,6 +24,8 @@ public:
 
 		//set active shader of model
 		m_model->useShader(m_shader);
+		unsigned int texture = Textures::getTexture("Floor.png");
+		Textures::setTextureSlot(texture, 0);
 		m_world->getCamera()->setOrthopgraphic(false);
 	}
 
@@ -34,7 +37,7 @@ public:
 		m_rotationY += 0.1f;
 		if (m_rotationY > 360.0f)
 			m_rotationY = 0.0f;
-		m_world->getCamera()->setRotation(0.0f, m_rotationY, 0.0f);
+		m_world->getCamera()->setRotation(0.0f, 0.0f, 0.0f);
 		//m_world->requestQuit();
 	}
 

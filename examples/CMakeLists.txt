@@ -16,3 +16,5 @@ target_link_libraries(GlassWallExample
 	
 configure_file(glsl/debug.frag ${CMAKE_BINARY_DIR}/examples/debug.frag COPYONLY)
 configure_file(glsl/debug.vert ${CMAKE_BINARY_DIR}/examples/debug.vert COPYONLY)
+
+configure_file(resources/Floor.png ${CMAKE_BINARY_DIR}/examples/Floor.png COPYONLY)
