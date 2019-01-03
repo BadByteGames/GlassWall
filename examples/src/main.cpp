@@ -23,7 +23,7 @@ public:
 
 		//set active shader of model
 		m_model->useShader(m_shader);
-		m_world->getCamera()->setOrthopgraphic(true);
+		m_world->getCamera()->setOrthopgraphic(false);
 	}
 
 	virtual void update() {
