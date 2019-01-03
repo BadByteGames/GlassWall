@@ -72,9 +72,9 @@ glm::mat4 GW::RenderEngine::Camera::getViewMatrix()
 		viewMatrix = glm::lookAt(m_position, m_target, m_up);
 	}
 	else {
-		viewMatrix = glm::rotate(viewMatrix, m_rotations.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		viewMatrix = glm::rotate(viewMatrix, m_rotations.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		viewMatrix = glm::rotate(viewMatrix, m_rotations.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		viewMatrix = glm::rotate(viewMatrix, -m_rotations.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, -m_rotations.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		viewMatrix = glm::rotate(viewMatrix, -m_rotations.z, glm::vec3(0.0f, 0.0f, 1.0f));
 		viewMatrix = glm::translate(viewMatrix, -m_position);
 	}
 
@@ -100,4 +100,9 @@ glm::mat4 GW::RenderEngine::Camera::getProjectionMatrix()
 void GW::RenderEngine::Camera::setFOV(const float & fov)
 {
 	m_fov = fov;
+}
+
+glm::vec3 GW::RenderEngine::Camera::getPosition()
+{
+	return m_position;
 }

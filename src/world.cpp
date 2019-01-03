@@ -7,6 +7,10 @@
 #include <SDL.h>
 #include <model.h>
 #include <camera.h>
+#include <textures.h>
+
+const float MOVE_SPEED = 0.1f;
+const float SENSITIVITY = 0.3f;
 
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
@@ -58,8 +62,26 @@ namespace GW {
 			//TODO: Replace with actual input system
 			SDL_Event evnt;
 			while (SDL_PollEvent(&evnt)) {
-				if (evnt.type == SDL_QUIT) {
+				switch (evnt.type) {
+				case SDL_QUIT:
 					m_requestQuit = true;
+					break;
+				case SDL_KEYDOWN:
+					switch(evnt.key.keysym.sym) {
+					case SDLK_w:
+						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, -MOVE_SPEED));
+						break;
+					case SDLK_a:
+						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(-MOVE_SPEED, 0.0f, 0.0f));
+						break;
+					case SDLK_s:
+						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, MOVE_SPEED));
+						break;
+					case SDLK_d:
+						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(MOVE_SPEED, 0.0f, 0.0f));
+						break;
+					}
+					break;
 				}
 			}
 
@@ -81,6 +103,8 @@ namespace GW {
 		m_window->destroy();
 		delete m_window;
 		delete m_camera;
+		
+		RenderEngine::Textures::clearCache();
 
 		//don't delete entities managed by user
 	}

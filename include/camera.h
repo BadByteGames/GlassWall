@@ -42,6 +42,9 @@ namespace GW{
 
 			//sets the field of viw
 			void setFOV(const float& fov);
+
+			//some getters
+			glm::vec3 getPosition();
 		private:
 			//stores camera position
 			glm::vec3 m_position;
