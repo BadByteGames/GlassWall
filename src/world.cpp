@@ -9,7 +9,7 @@
 #include <camera.h>
 #include <textures.h>
 
-const float MOVE_SPEED = 0.1f;
+const float MOVE_SPEED = 0.01f;
 const float SENSITIVITY = 0.3f;
 
 namespace GW {
@@ -55,36 +55,31 @@ namespace GW {
 			//clear the window to black
 			m_window->clear(0.0f, 0.0f, 0.0f);
 
+			//update input
+			m_inputManager.update();
+
 			//update the world until stopped
 			update();
 
-			//quick hack for handling SDL Input
-			//TODO: Replace with actual input system
-			SDL_Event evnt;
-			while (SDL_PollEvent(&evnt)) {
-				switch (evnt.type) {
-				case SDL_QUIT:
-					m_requestQuit = true;
-					break;
-				case SDL_KEYDOWN:
-					switch(evnt.key.keysym.sym) {
-					case SDLK_w:
-						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, -MOVE_SPEED));
-						break;
-					case SDLK_a:
-						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(-MOVE_SPEED, 0.0f, 0.0f));
-						break;
-					case SDLK_s:
-						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, MOVE_SPEED));
-						break;
-					case SDLK_d:
-						m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(MOVE_SPEED, 0.0f, 0.0f));
-						break;
-					}
-					break;
-				}
+			//quit if necessary
+			if (m_inputManager.quitRequested()) {
+				m_requestQuit = true;
 			}
 
+			//quick wasd movement system
+			if (m_inputManager.isKeyDown(SDLK_w)) {
+				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, -MOVE_SPEED));
+			}
+			if (m_inputManager.isKeyDown(SDLK_a)) {
+				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(-MOVE_SPEED, 0.0f, 0.0f));
+			}
+			if (m_inputManager.isKeyDown(SDLK_s)) {
+				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, MOVE_SPEED));
+			}
+			if (m_inputManager.isKeyDown(SDLK_d)) {
+				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(MOVE_SPEED, 0.0f, 0.0f));
+			}
+						
 			//draw entity models
 			for (auto ent : m_entities) {
 				ent->m_model->draw();

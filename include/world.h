@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <settings.h>
+#include <inputmanager.h>
 
 namespace GW {
 	namespace RenderEngine{
@@ -60,5 +61,8 @@ namespace GW {
 
 		//currently active camera
 		RenderEngine::Camera* m_camera;
+
+		//stores key values
+		InputManager m_inputManager;
 	};
 }

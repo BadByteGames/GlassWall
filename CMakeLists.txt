@@ -16,7 +16,8 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/shaderprogram.h
 							${GLASSWALL_DIR}/include/model.h
 							${GLASSWALL_DIR}/include/camera.h
-							${GLASSWALL_DIR}/include/textures.h)
+							${GLASSWALL_DIR}/include/textures.h
+							${GLASSWALL_DIR}/include/inputmanager.h)
 
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
@@ -28,7 +29,8 @@ set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/shaderprogram.cpp
 				${GLASSWALL_DIR}/src/model.cpp
 				${GLASSWALL_DIR}/src/camera.cpp
-				${GLASSWALL_DIR}/src/textures.cpp)
+				${GLASSWALL_DIR}/src/textures.cpp
+				${GLASSWALL_DIR}/src/inputmanager.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 
