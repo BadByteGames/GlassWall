@@ -9,9 +9,6 @@
 #include <camera.h>
 #include <textures.h>
 
-const float MOVE_SPEED = 0.01f;
-const float SENSITIVITY = 0.3f;
-
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
@@ -35,6 +32,7 @@ namespace GW {
 		RenderEngine::initGL();
 
 		m_camera->setDimensions(1280, 720);
+		m_inputManager.setWindowDimensions(1280, 720);
 
 		//trigger all the entity world start events
 		for (auto ent : m_entities) {
@@ -64,20 +62,6 @@ namespace GW {
 			//quit if necessary
 			if (m_inputManager.quitRequested()) {
 				m_requestQuit = true;
-			}
-
-			//quick wasd movement system
-			if (m_inputManager.isKeyDown(SDLK_w)) {
-				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, -MOVE_SPEED));
-			}
-			if (m_inputManager.isKeyDown(SDLK_a)) {
-				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(-MOVE_SPEED, 0.0f, 0.0f));
-			}
-			if (m_inputManager.isKeyDown(SDLK_s)) {
-				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(0.0f, 0.0f, MOVE_SPEED));
-			}
-			if (m_inputManager.isKeyDown(SDLK_d)) {
-				m_camera->setAbsolutePosition(m_camera->getPosition() + glm::vec3(MOVE_SPEED, 0.0f, 0.0f));
 			}
 						
 			//draw entity models
@@ -144,6 +128,11 @@ namespace GW {
 	RenderEngine::Camera * World::getCamera()
 	{
 		return m_camera;
+	}
+
+	InputManager * World::getInputManager()
+	{
+		return &m_inputManager;
 	}
 
 	void World::update()

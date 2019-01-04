@@ -13,6 +13,10 @@ GW::InputManager::~InputManager()
 
 void GW::InputManager::update()
 {
+	//reset mouse motion relative
+	m_mouseMotion.xRel = 0;
+	m_mouseMotion.yRel = 0;
+
 	//handle all events
 	SDL_Event evnt;
 	while (SDL_PollEvent(&evnt)) {
@@ -49,9 +53,21 @@ void GW::InputManager::update()
 			}
 			break;
 		}
+		case SDL_MOUSEMOTION:
+		{
+			//update mouse motion values
+			//y rel and ypos are inverted
+			m_mouseMotion.xPos = evnt.motion.x;
+			m_mouseMotion.yPos = m_height - evnt.motion.y;
+			m_mouseMotion.xRel = evnt.motion.xrel;
+			m_mouseMotion.yRel = -evnt.motion.yrel;
+			break;
+			
+		}
 		default:
-			//unrecognized event, dev is lazy
-			std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
+			break;
+			//unrecognized event, event should be handled
+			//std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
 		}
 	}
 }
@@ -70,4 +86,20 @@ bool GW::InputManager::isKeyDown(int keycode)
 bool GW::InputManager::quitRequested()
 {
 	return m_quitRequested;
+}
+
+GW::MouseMotion GW::InputManager::getMouseData()
+{
+	return m_mouseMotion;
+}
+
+void GW::InputManager::setMouseTrapped(bool value)
+{
+	SDL_SetRelativeMouseMode(SDL_bool(value));
+}
+
+void GW::InputManager::setWindowDimensions(int width, int height)
+{
+	m_width = width;
+	m_height = height;
 }

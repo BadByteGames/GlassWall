@@ -7,6 +7,14 @@
 #include <string>
 
 namespace GW {
+	//structure for mouse motion data
+	struct MouseMotion {
+		int xPos = 0;
+		int yPos = 0;
+		int xRel = 0;
+		int yRel = 0;
+	};
+
 	class InputManager {
 	public:
 		InputManager();
@@ -20,11 +28,27 @@ namespace GW {
 
 		//gets whether QUIT has been called
 		bool quitRequested();
+
+		//get mouse data
+		GW::MouseMotion getMouseData();
+
+		//traps the mouse in the window
+		void setMouseTrapped(bool value);
+
+		//sets window dimensions
+		void setWindowDimensions(int width, int height);
 	private:
 		//stores key values
 		std::unordered_map<int, bool> m_keyValues;
 
 		//has user requested quit
 		bool m_quitRequested;
+
+		//mouse motion data
+		MouseMotion m_mouseMotion;
+
+		//window dimensions
+		int m_width = 0;
+		int m_height = 0;
 	};
 }

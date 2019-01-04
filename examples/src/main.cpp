@@ -5,9 +5,16 @@
 #include <shaderprogram.h>
 #include <camera.h>
 #include <textures.h>
+#include <inputmanager.h>
+#include <glm\gtc\matrix_transform.hpp>
 
 using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
+
+const float MOVE_SPEED = 0.005f;
+const float SENSITIVITY = 0.3f;
+const float PI = 3.14159265359f;
+
 class OneLiner : public GW::Entity {
 public:
 	using GW::Entity::Entity;
@@ -22,11 +29,16 @@ public:
 		//set up test data
 		m_model->test();
 
+		//capture mouse in window
+		m_world->getInputManager()->setMouseTrapped(true);
+
 		//set active shader of model
 		m_model->useShader(m_shader);
 		unsigned int texture = Textures::getTexture("Floor.png");
 		Textures::setTextureSlot(texture, 0);
 		m_world->getCamera()->setOrthopgraphic(false);
+		
+		angles = glm::vec3(0.0f);
 	}
 
 	virtual void update() {
@@ -34,11 +46,42 @@ public:
 			std::cout << "Screw you! I'm leaving!" << std::endl;
 			m_saidScrewYou = true;
 		}
-		m_rotationY += 0.1f;
-		if (m_rotationY > 360.0f)
-			m_rotationY = 0.0f;
-		m_world->getCamera()->setRotation(0.0f, 0.0f, 0.0f);
-		//m_world->requestQuit();
+
+		GW::RenderEngine::Camera* camera = m_world->getCamera();
+		GW::InputManager* inputManager = m_world->getInputManager();
+
+		//quick wasd movement system
+		if (inputManager->isKeyDown(SDLK_w)) {
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, -MOVE_SPEED, 0.0f);
+			glm::vec3 newPos = camera->getPosition() + translation;
+			camera->setAbsolutePosition(newPos);
+		}
+		if (inputManager->isKeyDown(SDLK_a)) {
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(-MOVE_SPEED, 0.0f, 0.0f, 0.0f);
+			glm::vec3 newPos = camera->getPosition() + translation;
+			camera->setAbsolutePosition(newPos);
+		}
+		if (inputManager->isKeyDown(SDLK_s)) {
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, MOVE_SPEED, 0.0f);
+			glm::vec3 newPos = camera->getPosition() + translation;
+			camera->setAbsolutePosition(newPos);
+		}
+		if (inputManager->isKeyDown(SDLK_d)) {
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(MOVE_SPEED, 0.0f, 0.0f, 0.0f);
+			glm::vec3 newPos = camera->getPosition() + translation;
+			camera->setAbsolutePosition(newPos);
+		}
+		
+		//change camera angles based off mouse motion
+		angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY;
+		angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY;
+
+		camera->setRotation(angles);
+
+		//request quit on escape
+		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
+			m_world->requestQuit();
+		}
 	}
 
 	virtual void cleanUp() {
@@ -55,6 +98,7 @@ private:
 
 	bool m_saidScrewYou = false;
 	ShaderProgram m_shader;
+	glm::vec3 angles;
 };
 
 int main(int argc, char** argv) {

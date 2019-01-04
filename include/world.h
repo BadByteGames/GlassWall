@@ -46,6 +46,8 @@ namespace GW {
 
 		//get a reference to the camera
 		RenderEngine::Camera* getCamera();
+
+		InputManager* getInputManager();
 	private:
 		void update();
 
