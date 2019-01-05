@@ -7,6 +7,7 @@
 #include <camera.h>
 #include <textures.h>
 #include <string>
+#include <colladaloader.h>
 
 GW::RenderEngine::Model::Model()
 {
@@ -20,24 +21,10 @@ GW::RenderEngine::Model::~Model()
 
 void GW::RenderEngine::Model::loadFromFile(std::string fileName)
 {
+	ColladaLoader colladaLoader;
+	colladaLoader.loadFromFile(fileName);
 
-}
-
-void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
-{
-	//set shader to use to shader id
-	m_program = shader.getProgram();
-}
-
-void GW::RenderEngine::Model::test()
-{
-	//fill up the model with some test data
-	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, WHITE, {1.0f, 1.0f} });
-	m_vertices.push_back({ { 0.5f, -0.5f, -10.0f }, WHITE, {1.0f, 0.0f} });
-	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, WHITE, {0.0f, 0.0f} });
-	m_vertices.push_back({ {0.5f, 0.5f, -10.0f}, WHITE, { 1.0f, 1.0f } });
-	m_vertices.push_back({ { -0.5f, 0.5f, -10.0f }, WHITE, {0.0f, 1.0f} });
-	m_vertices.push_back({ { -0.5f, -0.5f, -10.0f }, WHITE, {0.0f, 0.0f} });
+	m_vertices = colladaLoader.getVertices();
 
 	//generate a vbo
 	if (m_vbo == 0) {
@@ -54,11 +41,10 @@ void GW::RenderEngine::Model::test()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GW::RenderEngine::Model::cleanUp()
+void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 {
-	if (m_vbo != 0) {
-		glDeleteBuffers(1, &m_vbo);
-	}
+	//set shader to use to shader id
+	m_program = shader.getProgram();
 }
 
 void GW::RenderEngine::Model::setWorld(GW::World * world)

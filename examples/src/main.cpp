@@ -26,15 +26,15 @@ public:
 		//init the model
 		m_model = new GW::RenderEngine::Model();
 
-		//set up test data
-		m_model->test();
+		//load model
+		m_model->loadFromFile("test.dae");
 
 		//capture mouse in window
 		m_world->getInputManager()->setMouseTrapped(true);
 
 		//set active shader of model
 		m_model->useShader(m_shader);
-		unsigned int texture = Textures::getTexture("Floor.png");
+		unsigned int texture = Textures::getTexture("MeshTexture.png");
 		Textures::setTextureSlot(texture, 0);
 		m_world->getCamera()->setOrthopgraphic(false);
 		

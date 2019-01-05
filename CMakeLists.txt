@@ -5,6 +5,7 @@ project(GlassWall VERSION 1.0.0 LANGUAGES CXX)
 find_package(SDL2 REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm REQUIRED)
+find_package(tinyxml2 REQUIRED)
 
 find_package(OpenGL REQUIRED)
 
@@ -17,7 +18,8 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/model.h
 							${GLASSWALL_DIR}/include/camera.h
 							${GLASSWALL_DIR}/include/textures.h
-							${GLASSWALL_DIR}/include/inputmanager.h)
+							${GLASSWALL_DIR}/include/inputmanager.h
+							${GLASSWALL_DIR}/include/vertex.h)
 
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
@@ -30,7 +32,8 @@ set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/model.cpp
 				${GLASSWALL_DIR}/src/camera.cpp
 				${GLASSWALL_DIR}/src/textures.cpp
-				${GLASSWALL_DIR}/src/inputmanager.cpp)
+				${GLASSWALL_DIR}/src/inputmanager.cpp
+				${GLASSWALL_DIR}/src/colladaloader.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 
@@ -45,6 +48,7 @@ target_include_directories(GlassWall
 		${SDL2_INCLUDE_DIR}
 		${GLEW_INCLUDE_DIR}
 		${GLM_INCLUDE_DIR}
+		${tinyxml2_INCLUDE_DIR}
 )
 
 target_link_libraries(GlassWall 
@@ -52,7 +56,8 @@ PUBLIC
 	SDL2::SDL2 
 	SDL2::SDL2main
 	${OPENGL_gl_LIBRARY}
-	${GLEW_LIBRARIES})
+	${GLEW_LIBRARIES}
+	tinyxml2)
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)
 

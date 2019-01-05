@@ -6,6 +6,7 @@ list(APPEND CMAKE_MODULE_PATH ${GLASSWALL_CMAKE_DIR})
 find_package(SDL2 REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm REQUIRED)
+find_package(tinyxml2 REQUIRED)
 
 find_package(OpenGL REQUIRED)
 list(REMOVE_AT CMAKE_MODULE_PATH -1)

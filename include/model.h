@@ -3,66 +3,24 @@
 #include <string>
 #include <vector>
 #include <GL/glew.h>
+#include <vertex.h>
 
 namespace GW {
 	class World;
 	namespace RenderEngine {
 		class ShaderProgram;
 
-		//structs used for model rendering
-		struct Uv {
-			Uv() : u(0.0f), v(0.0f) {}
-			Uv(GLfloat u, GLfloat v) : u(u), v(v) {}
-			GLfloat u;
-			GLfloat v;
-		};
-		
-
-		struct Position {
-			Position(): x(0.0f), y(0.0f), z(0.0f) {}
-			Position(GLfloat x, GLfloat y, GLfloat z): x(x), y(y), z(z) {}
-			GLfloat x;
-			GLfloat y;
-			GLfloat z;
-		};
-
-		struct Color {
-			Color(): r(0), g(0), b(0), a(0) {}
-			Color(GLubyte r, GLubyte g, GLubyte b) : r(r), g(g), b(b), a(255) {}
-			Color(GLubyte r, GLubyte g, GLubyte b, GLubyte a): r(r), g(g), b(b), a(a) {}
-			GLubyte r;
-			GLubyte g;
-			GLubyte b;
-			GLubyte a;
-		};
-
-		//define some ease of use colors
-		const Color WHITE(255, 255, 255);
-		const Color BLACK(0, 0, 0);
-
-		struct Vertex {
-			Vertex() {}
-			Vertex(Position pos, Color color, Uv uv) : position(pos), color(color), uv(uv) {}
-			Position position;
-			Color color;
-			Uv uv;
-		};
-
-
 		class Model {
 		public:
 			Model();
 			~Model();
 
-			//loads a model from a file to be used when rendered
+			//loads a model from a file to be used when rendered from a .dae
 			void loadFromFile(std::string fileName);
 
 			//what shader the model should use
 			void useShader(const ShaderProgram& shader);
 
-			//temporary test draw function to check rendering system
-			//remove when model loading is in place
-			void test();
 
 			//clean up internals
 			void cleanUp();
