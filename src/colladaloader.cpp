@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+const float PI = 3.14159265359f;
 
 using tinyxml2::XMLNode;
 using tinyxml2::XMLElement;
@@ -26,11 +29,21 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 		//get model data
 		XMLElement* root = doc.FirstChildElement("COLLADA");
 		XMLElement* geometries = NULL;
+		XMLElement* asset = NULL;
 		if (root != NULL) {
+			asset = root->FirstChildElement("asset");
 			geometries = root->FirstChildElement("library_geometries");
 		}
 		else {
 			std::cout << "COLLADA is NULL" << std::endl;
+		}
+
+		std::string upAxis = "Y_UP";
+		if (asset != NULL) {
+			XMLElement* upAxisElement = asset->FirstChildElement("up_axis");
+			if (upAxisElement != NULL) {
+				upAxis = upAxisElement->GetText();
+			}
 		}
 
 		XMLElement* firstGeometry = NULL;
@@ -115,7 +128,21 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 							//loop through attribute
 							for (; index < m_indicies.size(); index += properties.size()) {
 								unsigned int sourceIndex = (unsigned int)m_indicies[index] * 3;
-								m_vertices[vertexIndex].position = Position(source[sourceIndex], source[sourceIndex + 1], source[sourceIndex + 2]);
+								glm::vec4 sourceVert = glm::vec4(source[sourceIndex], source[sourceIndex + 1], source[sourceIndex + 2], 0.0f);
+								//rotate vertex if up axis is different
+								if (upAxis == "Y_UP") {
+									//do nothing
+								}
+								else if (upAxis == "Z_UP") {
+									//rotate by 90 degrees
+									sourceVert = glm::rotate(glm::mat4(1.0f), (-90.0f  * PI) / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * sourceVert;
+								}
+								else {
+									//warn of unknown axis
+									std::cout << "Unknown up axis: " << upAxis << std::endl;
+								}
+
+								m_vertices[vertexIndex].position = Position(sourceVert.x, sourceVert.y, sourceVert.z);
 								vertexIndex++;
 							}
 						}
