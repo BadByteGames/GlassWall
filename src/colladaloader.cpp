@@ -126,7 +126,7 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 						auto source = m_sources.find(it.second.source)->second;
 						if (it.first == "VERTEX") {
 							//loop through attribute
-							for (; index < m_indicies.size(); index += properties.size()) {
+							for (; index < m_indicies.size(); index += (unsigned int)properties.size()) {
 								unsigned int sourceIndex = (unsigned int)m_indicies[index] * 3;
 								glm::vec4 sourceVert = glm::vec4(source[sourceIndex], source[sourceIndex + 1], source[sourceIndex + 2], 0.0f);
 								//rotate vertex if up axis is different
@@ -148,7 +148,7 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 						}
 						else if (it.first == "TEXCOORD") {
 							//loop through attribute
-							for (; index < m_indicies.size(); index += properties.size()) {
+							for (; index < m_indicies.size(); index += (unsigned int)properties.size()) {
 								unsigned int sourceIndex = (unsigned int)m_indicies[index] * 2;
 								m_vertices[vertexIndex].uv = Uv(source[sourceIndex], source[sourceIndex + 1]);
 								vertexIndex++;
