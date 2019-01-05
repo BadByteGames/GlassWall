@@ -4,13 +4,14 @@
 #include <vector>
 #include <GL/glew.h>
 #include <vertex.h>
+#include <component.h>
 
 namespace GW {
 	class World;
 	namespace RenderEngine {
 		class ShaderProgram;
 
-		class Model {
+		class Model : public Component {
 		public:
 			Model();
 			~Model();
@@ -38,9 +39,6 @@ namespace GW {
 
 			//vbo id
 			GLuint m_vbo;
-
-			//refrence to world
-			GW::World* m_world;
 
 			friend class GW::World;
 		};

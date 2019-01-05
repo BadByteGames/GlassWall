@@ -6,7 +6,6 @@ namespace GW {
 	{
 		m_name = name;
 		m_world = nullptr;
-		m_model = nullptr;
 	}
 
 	Entity::~Entity()

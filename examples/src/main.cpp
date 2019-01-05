@@ -2,6 +2,7 @@
 #include <entity.h>
 #include <iostream>
 #include <model.h>
+#include <component.h>
 #include <shaderprogram.h>
 #include <camera.h>
 #include <textures.h>
@@ -20,11 +21,17 @@ public:
 	using GW::Entity::Entity;
 
 	virtual void entityStart() {
+		rootComponent = new GW::Component();
+
 		//compile shaders on entity start
 		m_shader.compileShadersFromFile("debug.vert", "debug.frag");
 
 		//init the model
-		m_model = new GW::RenderEngine::Model();
+		m_model = new GW::RenderEngine::Model();;
+
+		rootComponent->addChild(m_model);
+		rootComponent->setAbsolutePosition(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_model->setRelativePosition(glm::vec3(1.0f, 1.0f, 1.0f));
 
 		//load model
 		m_model->loadFromFile("test.dae");
@@ -42,10 +49,8 @@ public:
 	}
 
 	virtual void update() {
-		if (!m_saidScrewYou) {
-			std::cout << "Screw you! I'm leaving!" << std::endl;
-			m_saidScrewYou = true;
-		}
+
+		rootComponent->setAbsolutePosition(glm::vec3((sin(m_rotationY)+2.0f)/2.0f, 0.0f, 0.0f));
 
 		GW::RenderEngine::Camera* camera = m_world->getCamera();
 		GW::InputManager* inputManager = m_world->getInputManager();
@@ -76,12 +81,18 @@ public:
 		angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY;
 		angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY;
 
+		angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
+
 		camera->setRotation(angles);
+
+		
 
 		//request quit on escape
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
 			m_world->requestQuit();
 		}
+
+		m_rotationY += 0.01f;
 	}
 
 	virtual void cleanUp() {
@@ -91,10 +102,13 @@ public:
 		m_model->cleanUp();
 		
 		delete m_model;
+		delete rootComponent;
 	}
 
 private:
 	float m_rotationY = 0.0f;
+
+	GW::RenderEngine::Model* m_model;
 
 	bool m_saidScrewYou = false;
 	ShaderProgram m_shader;

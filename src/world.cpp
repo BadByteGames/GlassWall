@@ -8,6 +8,7 @@
 #include <model.h>
 #include <camera.h>
 #include <textures.h>
+#include <component.h>
 
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
@@ -42,9 +43,7 @@ namespace GW {
 		//trigger any entity start events
 		for (auto ent : m_entities) {
 			ent->entityStart();
-			if (ent->m_model != nullptr) {
-				ent->m_model->setWorld(this);
-			}
+			initComponent(ent->rootComponent);
 		}
 
 		m_worldStarted = true;
@@ -66,7 +65,7 @@ namespace GW {
 						
 			//draw entity models
 			for (auto ent : m_entities) {
-				ent->m_model->draw();
+				draw();
 			}
 
 			//swap buffers
@@ -95,8 +94,8 @@ namespace GW {
 
 		//init entity if world already started
 		if (m_worldStarted) {
-			entity->m_model->setWorld(this);
 			entity->entityStart();
+			initComponent(entity->rootComponent);
 		}
 	}
 
@@ -140,9 +139,41 @@ namespace GW {
 		//call all entity update functions
 		for (auto ent : m_entities) {
 			ent->update();
-			if (ent->m_model != nullptr) {
-				ent->m_model->setWorld(this);
-			}
+			updateComponent(ent->rootComponent);
+		}
+	}
+	void World::draw()
+	{
+		for (auto it : m_entities) {
+			drawComponent(it->rootComponent);
+		}
+	}
+
+	void World::initComponent(Component * component)
+	{
+		component->m_world = this;
+		for (auto it : component->getChildren()) {
+			initComponent(it);
+		}
+	}
+
+	void World::updateComponent(Component * component)
+	{
+		component->update();
+		for (auto it : component->getChildren()) {
+			updateComponent(it);
+		}
+	}
+
+	void World::drawComponent(Component * component)
+	{
+		if (component->m_type == "model") {
+			GW::RenderEngine::Model* model = reinterpret_cast<GW::RenderEngine::Model*>(component);
+
+			model->draw();
+		}
+		for (auto it : component->getChildren()) {
+			drawComponent(it);
 		}
 	}
 }

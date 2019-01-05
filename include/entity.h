@@ -6,7 +6,8 @@ namespace GW {
 	namespace RenderEngine {
 		class Model;
 	}
-
+	
+	class Component;
 	class Entity {
 	public:
 		Entity(std::string);
@@ -26,7 +27,8 @@ namespace GW {
 	protected:
 		//refrence to parent world
 		World* m_world;
-		RenderEngine::Model* m_model;
+
+		Component* rootComponent;
 
 		//name of entity
 		std::string m_name;

@@ -11,6 +11,7 @@ namespace GW {
 	}
 
 	class Entity;
+	class Component;
 
 	class World {
 	public:
@@ -50,6 +51,14 @@ namespace GW {
 		InputManager* getInputManager();
 	private:
 		void update();
+
+		void draw();
+
+		void initComponent(Component* component);
+
+		void updateComponent(Component* component);
+
+		void drawComponent(Component* component);
 
 		std::vector<Entity*> m_entities;
 

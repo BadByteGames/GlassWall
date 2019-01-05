@@ -11,6 +11,8 @@
 
 GW::RenderEngine::Model::Model()
 {
+	Component();
+	m_type = "model";
 	m_program = 0;
 	m_vbo = 0;
 }
@@ -96,7 +98,7 @@ void GW::RenderEngine::Model::draw()
 
 	//set uniforms to proper values
 	if (modelUniform != -1) {
-		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(getTransform()));
 	}
 
 	if (viewUniform != -1) {
@@ -108,7 +110,7 @@ void GW::RenderEngine::Model::draw()
 	}
 
 	if (mvpUniform != -1) {
-		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix()));
+		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * getTransform()));
 	}
 
 	//set all sampler2D values
