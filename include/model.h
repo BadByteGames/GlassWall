@@ -21,7 +21,6 @@ namespace GW {
 			//what shader the model should use
 			void useShader(const ShaderProgram& shader);
 
-
 			//clean up internals
 			void cleanUp();
 

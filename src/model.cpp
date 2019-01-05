@@ -47,6 +47,13 @@ void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 	m_program = shader.getProgram();
 }
 
+void GW::RenderEngine::Model::cleanUp()
+{
+	if (m_vbo != 0) {
+		glDeleteBuffers(1, &m_vbo);
+	}
+}
+
 void GW::RenderEngine::Model::setWorld(GW::World * world)
 {
 	m_world = world;
