@@ -3,6 +3,7 @@
 #include <vector>
 #include <settings.h>
 #include <inputmanager.h>
+#include <fpscounter.h>
 
 namespace GW {
 	namespace RenderEngine{
@@ -81,5 +82,8 @@ namespace GW {
 
 		//stores key values
 		InputManager m_inputManager;
+
+		//calculate FPS
+		FpsCounter m_fpsCounter;
 	};
 }

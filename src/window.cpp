@@ -16,7 +16,6 @@ void GW::RenderEngine::Window::create(std::string name, int width, int height, u
 {
 	//create the window with specified flags
 	unsigned int windowFlags = SDL_WINDOW_OPENGL;
-
 	if (flags & WINDOWFLAGS::FULLSCREEN) {
 		windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
@@ -62,6 +61,11 @@ void GW::RenderEngine::Window::clear(float r, float g, float b, float a)
 void GW::RenderEngine::Window::swapBuffers()
 {
 	SDL_GL_SwapWindow(m_window);
+}
+
+void GW::RenderEngine::Window::setTitle(std::string title)
+{
+	SDL_SetWindowTitle(m_window, title.c_str());
 }
 
 void GW::RenderEngine::Window::destroy()

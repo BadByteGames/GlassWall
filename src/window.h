@@ -30,6 +30,9 @@ namespace GW {
 			//call at end of frame to reset draw
 			void swapBuffers();
 
+			//sets window title
+			void setTitle(std::string title);
+			
 			//call to clean up internal variables
 			void destroy();
 		private:

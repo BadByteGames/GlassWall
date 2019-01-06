@@ -84,7 +84,6 @@ void GW::RenderEngine::Model::draw()
 	GLint projectionUniform = glGetUniformLocation(m_program, "projection");
 	GLint mvpUniform = glGetUniformLocation(m_program, "mvp");
 	GLint ambientStrengthUniform = glGetUniformLocation(m_program, "ambientstrength");
-	GLint ambientColorUniform = glGetUniformLocation(m_program, "ambientcolor");
 	GLint lightPosUniform = glGetUniformLocation(m_program, "lightpos");
 	GLint lightColorUniform = glGetUniformLocation(m_program, "lightcolor");
 	GLint invertedModelUniform = glGetUniformLocation(m_program, "invertedmodel");
@@ -133,15 +132,6 @@ void GW::RenderEngine::Model::draw()
 		glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(getTransform()))));
 	}
 
-	if (ambientColorUniform != -1) {
-		glUniform3fv(ambientColorUniform, 1, glm::value_ptr(m_world->getLighting()->getAmbientColor()));
-	}
-
-	float ambientStrength = m_world->getLighting()->getAmbientStrength();
-	if (ambientStrengthUniform != -1) {
-		glUniform1fv(ambientStrengthUniform, 1, &ambientStrength);
-	}
-
 	LightColor lightColor = m_world->getLighting()->getLights()[0].color;
 	if (lightColorUniform != -1) {
 		glUniform3fv(lightColorUniform, 1, glm::value_ptr(glm::vec3(lightColor.r, lightColor.g, lightColor.b)));
@@ -154,6 +144,10 @@ void GW::RenderEngine::Model::draw()
 
 	if (specularStrengthUniform != -1) {
 		glUniform1fv(specularStrengthUniform, 1, &m_world->getLighting()->getLights()[0].specularStrength);
+	}
+
+	if (ambientStrengthUniform != -1) {
+		glUniform1fv(ambientStrengthUniform, 1, &m_world->getLighting()->getLights()[0].ambientStrength);
 	}
 
 	if (viewerPosUniform != -1) {
@@ -187,6 +181,7 @@ void GW::RenderEngine::Model::draw()
 	if (normalAttrib != -1) {
 		glDisableVertexAttribArray(normalAttrib);
 	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//stop using shader

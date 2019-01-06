@@ -8,7 +8,6 @@ in vec3 out_position;
 uniform sampler2D textureSlot0;
 uniform float ambientstrength;
 uniform float specularstrength;
-uniform vec3 ambientcolor;
 uniform vec3 lightpos;
 uniform vec3 lightcolor;
 uniform vec3 viewerpos;
@@ -16,7 +15,7 @@ uniform mat4 invertedmodel;
 
 out vec4 gl_FragColor;
 void main(void){
-	vec3 ambient = ambientcolor * vec3(ambientstrength);
+	vec3 ambient = lightcolor * vec3(ambientstrength);
 	
 	vec3 normal = normalize(mat3(invertedmodel) * out_normal);
 	vec3 lightdir = normalize(lightpos - out_position);

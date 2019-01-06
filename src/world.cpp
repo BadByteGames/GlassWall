@@ -51,6 +51,7 @@ namespace GW {
 		m_worldStarted = true;
 
 		while (!m_requestQuit) {
+			m_fpsCounter.startFrame();
 			//clear the window to black
 			m_window->clear(0.0f, 0.0f, 0.0f);
 
@@ -72,6 +73,10 @@ namespace GW {
 
 			//swap buffers
 			m_window->swapBuffers();
+			m_fpsCounter.endFrame();
+
+			//set window title
+			m_window->setTitle("Glass Wall | "+std::to_string(m_fpsCounter.getFps())+" FPS");
 		}
 
 		//call entity cleanup events
