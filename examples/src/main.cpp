@@ -33,9 +33,15 @@ public:
 		m_model = new GW::RenderEngine::Model();;
 
 		rootComponent->addChild(m_model);
-		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -8.0f));
+		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -4.0f));
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
-
+		
+		glm::vec3 original = glm::vec3(1.0f, 1.0f, 1.0f);
+		std::cout << "Original: " << glm::to_string<glm::vec3>(original) << std::endl;
+		glm::vec3 translated = rootComponent->getTransform() * glm::vec4(original, 1.0f);
+		std::cout<<"Translated: "<< glm::to_string<glm::vec3>(translated) << std::endl;
+		glm::vec3 translatedAgain = m_model->getTransform() * glm::vec4(original, 1.0f);
+		std::cout<<"Translated again: " << glm::to_string<glm::vec3>(translatedAgain) << std::endl;
 		//load model
 		m_model->loadFromFile("test.dae");
 
@@ -118,8 +124,9 @@ int main(int argc, char** argv) {
 	GW::World world;
 
 	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 8.0f }, 0.5f, 0.1f));
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -8.0f }, 0.5f, 0.1f));
-	
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 0.0f, 0.0f }, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
+
 	OneLiner* dummy = new OneLiner("OneLiner");
 
 	world.addEntity(dummy);
