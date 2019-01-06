@@ -8,6 +8,9 @@
 #include <textures.h>
 #include <string>
 #include <colladaloader.h>
+#include <lighting.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 
 GW::RenderEngine::Model::Model()
 {
@@ -73,12 +76,18 @@ void GW::RenderEngine::Model::draw()
 	GLint positionAttrib = glGetAttribLocation(m_program, "in_position");
 	GLint colorAttrib = glGetAttribLocation(m_program, "in_color");
 	GLint uvAttrib = glGetAttribLocation(m_program, "in_uv");
-	
+	GLint normalAttrib = glGetAttribLocation(m_program, "in_normal");
+
 	//get program uniforms
 	GLint modelUniform = glGetUniformLocation(m_program, "model");
 	GLint viewUniform = glGetUniformLocation(m_program, "view");
 	GLint projectionUniform = glGetUniformLocation(m_program, "projection");
 	GLint mvpUniform = glGetUniformLocation(m_program, "mvp");
+	GLint ambientStrengthUniform = glGetUniformLocation(m_program, "ambientstrength");
+	GLint ambientColorUniform = glGetUniformLocation(m_program, "ambientcolor");
+	GLint lightPosUniform = glGetUniformLocation(m_program, "lightpos");
+	GLint lightColorUniform = glGetUniformLocation(m_program, "lightcolor");
+	GLint invertedModelUniform = glGetUniformLocation(m_program, "invertedmodel");
 
 	//enable attributes as needed
 	if (positionAttrib != -1) {
@@ -96,6 +105,11 @@ void GW::RenderEngine::Model::draw()
 		glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 	}
 
+	if (normalAttrib != -1) {
+		glEnableVertexAttribArray(normalAttrib);
+		glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	}
+
 	//set uniforms to proper values
 	if (modelUniform != -1) {
 		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(getTransform()));
@@ -111,6 +125,29 @@ void GW::RenderEngine::Model::draw()
 
 	if (mvpUniform != -1) {
 		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * getTransform()));
+	}
+
+	if (invertedModelUniform != -1) {
+		glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(getTransform()))));
+	}
+
+	if (ambientColorUniform != -1) {
+		glUniform3fv(ambientColorUniform, 1, glm::value_ptr(m_world->getLighting()->getAmbientColor()));
+	}
+
+	float ambientStrength = m_world->getLighting()->getAmbientStrength();
+	if (ambientStrengthUniform != -1) {
+		glUniform1fv(ambientStrengthUniform, 1, &ambientStrength);
+	}
+
+	LightColor lightColor = m_world->getLighting()->getLights()[0].color;
+	if (lightColorUniform != -1) {
+		glUniform3fv(lightColorUniform, 1, glm::value_ptr(glm::vec3(lightColor.r, lightColor.g, lightColor.b)));
+	}
+
+	Position lightPos = m_world->getLighting()->getLights()[0].position;
+	if (lightPosUniform != -1) {
+		glUniform3fv(lightPosUniform, 1, glm::value_ptr(glm::vec3(lightPos.x, lightPos.y, lightPos.z)));
 	}
 
 	//set all sampler2D values
@@ -133,6 +170,13 @@ void GW::RenderEngine::Model::draw()
 		glDisableVertexAttribArray(colorAttrib);
 	}
 
+	if (uvAttrib != -1) {
+		glDisableVertexAttribArray(uvAttrib);
+	}
+
+	if (normalAttrib != -1) {
+		glDisableVertexAttribArray(normalAttrib);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//stop using shader

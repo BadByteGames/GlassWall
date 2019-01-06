@@ -154,6 +154,28 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 								vertexIndex++;
 							}
 						}
+						else if (it.first == "NORMAL") {
+							//loop through attribute
+							for (; index < m_indicies.size(); index += (unsigned int)properties.size()) {
+								unsigned int sourceIndex = (unsigned int)m_indicies[index] * 3;
+								glm::vec4 sourceVert = glm::vec4(source[sourceIndex], source[sourceIndex + 1], source[sourceIndex + 2], 0.0f);
+								//rotate vertex if up axis is different
+								if (upAxis == "Y_UP") {
+									//do nothing
+								}
+								else if (upAxis == "Z_UP") {
+									//rotate by 90 degrees
+									sourceVert = glm::rotate(glm::mat4(1.0f), (-90.0f  * PI) / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * sourceVert;
+								}
+								else {
+									//warn of unknown axis
+									std::cout << "Unknown up axis: " << upAxis << std::endl;
+								}
+
+								m_vertices[vertexIndex].normal = Normal(sourceVert.x, sourceVert.y, sourceVert.z);
+								vertexIndex++;
+							}
+						}
 						
 					}
 				}

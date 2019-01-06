@@ -7,6 +7,7 @@
 #include <camera.h>
 #include <textures.h>
 #include <inputmanager.h>
+#include <lighting.h>
 #include <glm\gtc\matrix_transform.hpp>
 
 using GW::RenderEngine::ShaderProgram;
@@ -30,8 +31,8 @@ public:
 		m_model = new GW::RenderEngine::Model();;
 
 		rootComponent->addChild(m_model);
-		rootComponent->setAbsolutePosition(glm::vec3(1.0f, 0.0f, 0.0f));
-		m_model->setRelativePosition(glm::vec3(1.0f, 1.0f, 1.0f));
+		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -5.0f));
+		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		//load model
 		m_model->loadFromFile("test.dae");
@@ -50,10 +51,9 @@ public:
 
 	virtual void update() {
 
-		rootComponent->setAbsolutePosition(glm::vec3((sin(m_rotationY)+2.0f)/2.0f, 0.0f, 0.0f));
-
 		GW::RenderEngine::Camera* camera = m_world->getCamera();
 		GW::InputManager* inputManager = m_world->getInputManager();
+		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
 		//quick wasd movement system
 		if (inputManager->isKeyDown(SDLK_w)) {
@@ -85,8 +85,6 @@ public:
 
 		camera->setRotation(angles);
 
-		
-
 		//request quit on escape
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
 			m_world->requestQuit();
@@ -106,9 +104,9 @@ public:
 	}
 
 private:
-	float m_rotationY = 0.0f;
-
 	GW::RenderEngine::Model* m_model;
+
+	float m_rotationY = 0.0f;
 
 	bool m_saidScrewYou = false;
 	ShaderProgram m_shader;
@@ -117,6 +115,8 @@ private:
 
 int main(int argc, char** argv) {
 	GW::World world;
+
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -7.0f }, 1.0f));
 
 	OneLiner* dummy = new OneLiner("OneLiner");
 

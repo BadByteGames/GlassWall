@@ -20,7 +20,8 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/textures.h
 							${GLASSWALL_DIR}/include/inputmanager.h
 							${GLASSWALL_DIR}/include/vertex.h
-							${GLASSWALL_DIR}/include/component.h)
+							${GLASSWALL_DIR}/include/component.h
+							${GLASSWALL_DIR}/include/lighting.h)
 
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
@@ -35,7 +36,8 @@ set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/textures.cpp
 				${GLASSWALL_DIR}/src/inputmanager.cpp
 				${GLASSWALL_DIR}/src/colladaloader.cpp
-				${GLASSWALL_DIR}/src/component.cpp)
+				${GLASSWALL_DIR}/src/component.cpp
+				${GLASSWALL_DIR}/src/lighting.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 

@@ -20,6 +20,14 @@ namespace GW {
 			GLfloat z;
 		};
 
+		struct Normal {
+			Normal() : x(0.0f), y(0.0f), z(0.0f) {}
+			Normal(GLfloat x, GLfloat y, GLfloat z) : x(x), y(y), z(z) {}
+			GLfloat x;
+			GLfloat y;
+			GLfloat z;
+		};
+
 		struct Color {
 			Color() : r(255), g(255), b(255), a(255) {}
 			Color(GLubyte r, GLubyte g, GLubyte b) : r(r), g(g), b(b), a(255) {}
@@ -36,10 +44,11 @@ namespace GW {
 
 		struct Vertex {
 			Vertex() {}
-			Vertex(Position pos, Color color, Uv uv) : position(pos), color(color), uv(uv) {}
+			Vertex(Position pos, Color color, Uv uv, Normal normal) : position(pos), color(color), uv(uv), normal(normal) {}
 			Position position;
 			Color color;
 			Uv uv;
+			Normal normal;
 		};
 	}
 }

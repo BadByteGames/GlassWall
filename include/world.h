@@ -8,6 +8,7 @@ namespace GW {
 	namespace RenderEngine{
 		class Window;
 		class Camera;
+		class Lighting;
 	}
 
 	class Entity;
@@ -49,6 +50,8 @@ namespace GW {
 		RenderEngine::Camera* getCamera();
 
 		InputManager* getInputManager();
+
+		RenderEngine::Lighting* getLighting();
 	private:
 		void update();
 
@@ -72,6 +75,9 @@ namespace GW {
 
 		//currently active camera
 		RenderEngine::Camera* m_camera;
+
+		//stores all lighting
+		RenderEngine::Lighting* m_lighting;
 
 		//stores key values
 		InputManager m_inputManager;

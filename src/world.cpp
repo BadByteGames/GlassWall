@@ -9,11 +9,13 @@
 #include <camera.h>
 #include <textures.h>
 #include <component.h>
+#include <lighting.h>
 
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
 		m_camera = new RenderEngine::Camera();
+		m_lighting = new RenderEngine::Lighting();
 	}
 
 	World::~World()
@@ -81,6 +83,7 @@ namespace GW {
 		m_window->destroy();
 		delete m_window;
 		delete m_camera;
+		delete m_lighting;
 		
 		RenderEngine::Textures::clearCache();
 
@@ -132,6 +135,11 @@ namespace GW {
 	InputManager * World::getInputManager()
 	{
 		return &m_inputManager;
+	}
+
+	RenderEngine::Lighting * World::getLighting()
+	{
+		return m_lighting;
 	}
 
 	void World::update()
