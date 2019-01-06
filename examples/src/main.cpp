@@ -116,7 +116,7 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -7.0f }, 1.0f));
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -7.0f }, 0.5f));
 
 	OneLiner* dummy = new OneLiner("OneLiner");
 

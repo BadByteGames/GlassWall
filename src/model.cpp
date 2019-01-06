@@ -88,6 +88,8 @@ void GW::RenderEngine::Model::draw()
 	GLint lightPosUniform = glGetUniformLocation(m_program, "lightpos");
 	GLint lightColorUniform = glGetUniformLocation(m_program, "lightcolor");
 	GLint invertedModelUniform = glGetUniformLocation(m_program, "invertedmodel");
+	GLint viewerPosUniform = glGetUniformLocation(m_program, "viewerpos");
+	GLint specularStrengthUniform = glGetUniformLocation(m_program, "specularstrength");
 
 	//enable attributes as needed
 	if (positionAttrib != -1) {
@@ -148,6 +150,14 @@ void GW::RenderEngine::Model::draw()
 	Position lightPos = m_world->getLighting()->getLights()[0].position;
 	if (lightPosUniform != -1) {
 		glUniform3fv(lightPosUniform, 1, glm::value_ptr(glm::vec3(lightPos.x, lightPos.y, lightPos.z)));
+	}
+
+	if (specularStrengthUniform != -1) {
+		glUniform1fv(specularStrengthUniform, 1, &m_world->getLighting()->getLights()[0].specularStrength);
+	}
+
+	if (viewerPosUniform != -1) {
+		glUniform3fv(viewerPosUniform, 1, glm::value_ptr(m_world->getCamera()->getPosition()));
 	}
 
 	//set all sampler2D values

@@ -16,11 +16,11 @@ namespace GW {
 
 		struct Light {
 			Light(){}
-			Light(LightColor color, Position position, float strength):color(color), position(position), strength(strength){}
+			Light(LightColor color, Position position, float strength):color(color), position(position), specularStrength(strength){}
 
 			LightColor color;
 			Position position;
-			float strength;
+			float specularStrength;
 		};
 
 		class Lighting {
