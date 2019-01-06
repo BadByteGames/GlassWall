@@ -53,6 +53,8 @@ namespace GW {
 		InputManager* getInputManager();
 
 		RenderEngine::Lighting* getLighting();
+
+		FpsCounter* getFpsCounter();
 	private:
 		void update();
 

@@ -14,8 +14,12 @@ namespace GW {
 		void endFrame();
 
 		float getFps();
+
+		float getDeltaTime();
 	private:
 		unsigned int m_lastFrame;
+
+		float m_deltaTime;
 
 		int m_currentIndex;
 

@@ -15,8 +15,8 @@
 using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
 
-const float MOVE_SPEED = 0.005f;
-const float SENSITIVITY = 0.3f;
+const float MOVE_SPEED = 1.5f;
+const float SENSITIVITY = 90.0f;
 const float PI = 3.14159265359f;
 
 class OneLiner : public GW::Entity {
@@ -61,32 +61,35 @@ public:
 
 		GW::RenderEngine::Camera* camera = m_world->getCamera();
 		GW::InputManager* inputManager = m_world->getInputManager();
+		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
+		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
+
 
 		//quick wasd movement system
 		if (inputManager->isKeyDown(SDLK_w)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, -MOVE_SPEED, 0.0f);
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, -MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f);
 			glm::vec3 newPos = camera->getPosition() + translation;
 			camera->setAbsolutePosition(newPos);
 		}
 		if (inputManager->isKeyDown(SDLK_a)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(-MOVE_SPEED, 0.0f, 0.0f, 0.0f);
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(-MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, 0.0f, 0.0f);
 			glm::vec3 newPos = camera->getPosition() + translation;
 			camera->setAbsolutePosition(newPos);
 		}
 		if (inputManager->isKeyDown(SDLK_s)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, MOVE_SPEED, 0.0f);
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, MOVE_SPEED* fpsCounter->getDeltaTime(), 0.0f);
 			glm::vec3 newPos = camera->getPosition() + translation;
 			camera->setAbsolutePosition(newPos);
 		}
 		if (inputManager->isKeyDown(SDLK_d)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(MOVE_SPEED, 0.0f, 0.0f, 0.0f);
+			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, 0.0f, 0.0f);
 			glm::vec3 newPos = camera->getPosition() + translation;
 			camera->setAbsolutePosition(newPos);
 		}
 		
 		//change camera angles based off mouse motion
-		angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY;
-		angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY;
+		angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY * fpsCounter->getDeltaTime();
+		angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY * fpsCounter->getDeltaTime();
 
 		angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
 
@@ -97,7 +100,7 @@ public:
 			m_world->requestQuit();
 		}
 
-		m_rotationY += 0.001f;
+		m_rotationY += 5.0f * fpsCounter->getDeltaTime();
 	}
 
 	virtual void cleanUp() {

@@ -147,6 +147,11 @@ namespace GW {
 		return m_lighting;
 	}
 
+	FpsCounter * World::getFpsCounter()
+	{
+		return &m_fpsCounter;
+	}
+
 	void World::update()
 	{
 		//call all entity update functions
