@@ -83,12 +83,8 @@ void GW::RenderEngine::Model::draw()
 	GLint viewUniform = glGetUniformLocation(m_program, "view");
 	GLint projectionUniform = glGetUniformLocation(m_program, "projection");
 	GLint mvpUniform = glGetUniformLocation(m_program, "mvp");
-	GLint ambientStrengthUniform = glGetUniformLocation(m_program, "ambientstrength");
-	GLint lightPosUniform = glGetUniformLocation(m_program, "lightpos");
-	GLint lightColorUniform = glGetUniformLocation(m_program, "lightcolor");
 	GLint invertedModelUniform = glGetUniformLocation(m_program, "invertedmodel");
 	GLint viewerPosUniform = glGetUniformLocation(m_program, "viewerpos");
-	GLint specularStrengthUniform = glGetUniformLocation(m_program, "specularstrength");
 
 	//enable attributes as needed
 	if (positionAttrib != -1) {
@@ -111,9 +107,12 @@ void GW::RenderEngine::Model::draw()
 		glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 	}
 
+	//glm::mat4 modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));
+	glm::mat4 modelTransform = getTransform();
+
 	//set uniforms to proper values
 	if (modelUniform != -1) {
-		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(getTransform()));
+		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelTransform));
 	}
 
 	if (viewUniform != -1) {
@@ -125,29 +124,11 @@ void GW::RenderEngine::Model::draw()
 	}
 
 	if (mvpUniform != -1) {
-		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * getTransform()));
+		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * modelTransform));
 	}
 
 	if (invertedModelUniform != -1) {
-		glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(getTransform()))));
-	}
-
-	LightColor lightColor = m_world->getLighting()->getLights()[0].color;
-	if (lightColorUniform != -1) {
-		glUniform3fv(lightColorUniform, 1, glm::value_ptr(glm::vec3(lightColor.r, lightColor.g, lightColor.b)));
-	}
-
-	Position lightPos = m_world->getLighting()->getLights()[0].position;
-	if (lightPosUniform != -1) {
-		glUniform3fv(lightPosUniform, 1, glm::value_ptr(glm::vec3(lightPos.x, lightPos.y, lightPos.z)));
-	}
-
-	if (specularStrengthUniform != -1) {
-		glUniform1fv(specularStrengthUniform, 1, &m_world->getLighting()->getLights()[0].specularStrength);
-	}
-
-	if (ambientStrengthUniform != -1) {
-		glUniform1fv(ambientStrengthUniform, 1, &m_world->getLighting()->getLights()[0].ambientStrength);
+		glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(modelTransform))));
 	}
 
 	if (viewerPosUniform != -1) {
@@ -159,6 +140,34 @@ void GW::RenderEngine::Model::draw()
 		GLint samplerLocation = glGetUniformLocation(m_program, std::string("textureSlot" + std::to_string(i)).c_str());
 		if (samplerLocation != -1) {
 			glUniform1i(samplerLocation, i);
+		}
+	}
+	std::vector<Light> lights = m_world->getLighting()->getLights();
+	//set all light uniforms
+	for (int i = 0; i < lights.size(); i++) {
+		std::string lightArrayItem = "lights[" + std::to_string(i) + "]";
+
+		//set each property
+		GLint ambientStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".ambientstrength").c_str());
+		if (ambientStrengthUniform != -1) {
+			glUniform1fv(ambientStrengthUniform, 1, &lights[i].ambientStrength);
+		}
+	
+		GLint specularStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".specularstrength").c_str());
+		if (specularStrengthUniform != -1) {
+			glUniform1fv(specularStrengthUniform, 1, &lights[i].specularStrength);
+		}
+
+		GLint lightColorUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".lightcolor").c_str());
+		LightColor lightColor = lights[i].color;
+		if (lightColorUniform != -1) {
+			glUniform3fv(lightColorUniform, 1, glm::value_ptr(glm::vec3(lightColor.r, lightColor.g, lightColor.b)));
+		}
+
+		GLint lightPosUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".lightpos").c_str());
+		Position lightPos = lights[i].position;
+		if (lightPosUniform != -1) {
+			glUniform3fv(lightPosUniform, 1, glm::value_ptr(glm::vec3(lightPos.x, lightPos.y, lightPos.z)));
 		}
 	}
 

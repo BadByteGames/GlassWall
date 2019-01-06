@@ -2,7 +2,7 @@
 
 namespace GW {
 	//const value describing frame samples
-	const int FRAME_SAMPLES = 10;
+	const int FRAME_SAMPLES = 30;
 
 	class FpsCounter {
 	public:

@@ -9,6 +9,8 @@
 #include <inputmanager.h>
 #include <lighting.h>
 #include <glm\gtc\matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm\gtx\string_cast.hpp>
 
 using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
@@ -31,7 +33,7 @@ public:
 		m_model = new GW::RenderEngine::Model();;
 
 		rootComponent->addChild(m_model);
-		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -5.0f));
+		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -8.0f));
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		//load model
@@ -53,7 +55,6 @@ public:
 
 		GW::RenderEngine::Camera* camera = m_world->getCamera();
 		GW::InputManager* inputManager = m_world->getInputManager();
-		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
 		//quick wasd movement system
 		if (inputManager->isKeyDown(SDLK_w)) {
@@ -90,7 +91,7 @@ public:
 			m_world->requestQuit();
 		}
 
-		m_rotationY += 0.01f;
+		m_rotationY += 0.001f;
 	}
 
 	virtual void cleanUp() {
@@ -116,8 +117,9 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
-
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 8.0f }, 0.5f, 0.1f));
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -8.0f }, 0.5f, 0.1f));
+	
 	OneLiner* dummy = new OneLiner("OneLiner");
 
 	world.addEntity(dummy);
@@ -125,6 +127,6 @@ int main(int argc, char** argv) {
 	world.start();
 
 	delete dummy;
-
+	
 	return 0;
 }
