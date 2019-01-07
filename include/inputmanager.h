@@ -2,6 +2,7 @@
 
 //expose keycodes to user
 #include <SDL_keycode.h>
+#include <SDL_mouse.h>
 
 #include <unordered_map>
 #include <string>
@@ -26,6 +27,9 @@ namespace GW {
 		//get is key down
 		bool isKeyDown(int keycode);
 
+		//gets if mouse button down
+		bool isMouseButtonDown(int keycode);
+
 		//gets whether QUIT has been called
 		bool quitRequested();
 
@@ -40,6 +44,9 @@ namespace GW {
 	private:
 		//stores key values
 		std::unordered_map<int, bool> m_keyValues;
+
+		//stores mouse values
+		std::unordered_map<int, bool> m_mouseButtons;
 
 		//has user requested quit
 		bool m_quitRequested;

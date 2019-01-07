@@ -35,13 +35,7 @@ public:
 		rootComponent->addChild(m_model);
 		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -4.0f));
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
-		
-		glm::vec3 original = glm::vec3(1.0f, 1.0f, 1.0f);
-		std::cout << "Original: " << glm::to_string<glm::vec3>(original) << std::endl;
-		glm::vec3 translated = rootComponent->getTransform() * glm::vec4(original, 1.0f);
-		std::cout<<"Translated: "<< glm::to_string<glm::vec3>(translated) << std::endl;
-		glm::vec3 translatedAgain = m_model->getTransform() * glm::vec4(original, 1.0f);
-		std::cout<<"Translated again: " << glm::to_string<glm::vec3>(translatedAgain) << std::endl;
+
 		//load model
 		m_model->loadFromFile("test.dae");
 
@@ -87,20 +81,36 @@ public:
 			camera->setAbsolutePosition(newPos);
 		}
 		
-		//change camera angles based off mouse motion
-		angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY * fpsCounter->getDeltaTime();
-		angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY * fpsCounter->getDeltaTime();
+		//change camera angles based off mouse motion if mouse locked
+		if (m_mouseLocked) {
+			angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY * fpsCounter->getDeltaTime();
+			angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY * fpsCounter->getDeltaTime();
 
-		angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
+			angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
 
-		camera->setRotation(angles);
+			camera->setRotation(angles);
+		}
 
 		//request quit on escape
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
 			m_world->requestQuit();
 		}
 
-		m_rotationY += 5.0f * fpsCounter->getDeltaTime();
+		if(inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
+			m_rotationY += 20.0f * fpsCounter->getDeltaTime();
+		if (inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
+			m_rotationY -= 20.0f * fpsCounter->getDeltaTime();
+
+		if (inputManager->isMouseButtonDown(SDL_BUTTON_MIDDLE)) {
+			if (m_mouseLocked) {
+				m_mouseLocked = false;
+				m_world->getInputManager()->setMouseTrapped(false);
+			}
+			else {
+				m_mouseLocked = true;
+				m_world->getInputManager()->setMouseTrapped(true);
+			}
+		}
 	}
 
 	virtual void cleanUp() {
@@ -118,7 +128,7 @@ private:
 
 	float m_rotationY = 0.0f;
 
-	bool m_saidScrewYou = false;
+	bool m_mouseLocked = true;
 	ShaderProgram m_shader;
 	glm::vec3 angles;
 };

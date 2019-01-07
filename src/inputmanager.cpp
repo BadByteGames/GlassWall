@@ -26,30 +26,32 @@ void GW::InputManager::update()
 			m_quitRequested = true;
 			break;
 		case SDL_KEYDOWN:
-		{
-			//update our key to down if found
-			auto it = m_keyValues.find(evnt.key.keysym.sym);
-			if (it != m_keyValues.end()) {
-				//key found, update
-				it->second = true;
-			}
-			else {
-				//create entry for key
-				m_keyValues.insert(std::make_pair(evnt.key.keysym.sym, true));
-			}
-			break;
-		}
 		case SDL_KEYUP:
 		{
 			//update our key to up if found
 			auto it = m_keyValues.find(evnt.key.keysym.sym);
 			if (it != m_keyValues.end()) {
 				//key found, update
-				it->second = false;
+				it->second = evnt.key.state;
 			}
 			else {
 				//create entry for key
-				m_keyValues.insert(std::make_pair(evnt.key.keysym.sym, false));
+				m_keyValues.insert(std::make_pair(evnt.key.keysym.sym, evnt.key.state));
+			}
+			break;
+		}
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		{
+			//update our key to up if found
+			auto it = m_mouseButtons.find(evnt.button.button);
+			if (it != m_mouseButtons.end()) {
+				//key found, update
+				it->second = evnt.button.state;
+			}
+			else {
+				//create entry for key
+				m_mouseButtons.insert(std::make_pair(evnt.button.button, evnt.button.state));
 			}
 			break;
 		}
@@ -67,7 +69,7 @@ void GW::InputManager::update()
 		default:
 			break;
 			//unrecognized event, event should be handled
-			//std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
+			std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
 		}
 	}
 }
@@ -77,6 +79,17 @@ bool GW::InputManager::isKeyDown(int keycode)
 	//check if key stored in data and then return value if found or false if not
 	auto it = m_keyValues.find(keycode);
 	if (it != m_keyValues.end()) {
+		//key found, return value
+		return it->second;
+	}
+	return false;
+}
+
+bool GW::InputManager::isMouseButtonDown(int keycode)
+{
+	//check if button stored in data and then return value if found or false if not
+	auto it = m_mouseButtons.find(keycode);
+	if (it != m_mouseButtons.end()) {
 		//key found, return value
 		return it->second;
 	}
