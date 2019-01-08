@@ -39,8 +39,14 @@ namespace GW {
 		//traps the mouse in the window
 		void setMouseTrapped(bool value);
 
-		//sets window dimensions
+		//sets window dimensions for internal calculations
 		void setWindowDimensions(int width, int height);
+
+		//get mouse wheel movement
+		// +1 is up
+		// 0 is no movement
+		// -1 is down
+		int getMouseWheelMovement();
 	private:
 		//stores key values
 		std::unordered_map<int, bool> m_keyValues;
@@ -57,5 +63,8 @@ namespace GW {
 		//window dimensions
 		int m_width = 0;
 		int m_height = 0;
+
+		//stores mwheel movement
+		int m_wheelMovement = 0;
 	};
 }

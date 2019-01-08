@@ -96,10 +96,7 @@ public:
 			m_world->requestQuit();
 		}
 
-		if(inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
-			m_rotationY += 20.0f * fpsCounter->getDeltaTime();
-		if (inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
-			m_rotationY -= 20.0f * fpsCounter->getDeltaTime();
+		m_rotationY += (float)inputManager->getMouseWheelMovement() * 15.0f;
 
 		if (inputManager->isMouseButtonDown(SDL_BUTTON_MIDDLE)) {
 			if (m_mouseLocked) {

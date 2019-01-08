@@ -17,6 +17,9 @@ void GW::InputManager::update()
 	m_mouseMotion.xRel = 0;
 	m_mouseMotion.yRel = 0;
 
+	//reset mouse wheel movement
+	m_wheelMovement = 0;
+
 	//handle all events
 	SDL_Event evnt;
 	while (SDL_PollEvent(&evnt)) {
@@ -55,6 +58,12 @@ void GW::InputManager::update()
 			}
 			break;
 		}
+		case SDL_MOUSEWHEEL:
+		{
+			//handle mouse wheel movement
+			m_wheelMovement = evnt.wheel.y;
+			break;
+		}
 		case SDL_MOUSEMOTION:
 		{
 			//update mouse motion values
@@ -64,7 +73,6 @@ void GW::InputManager::update()
 			m_mouseMotion.xRel = evnt.motion.xrel;
 			m_mouseMotion.yRel = -evnt.motion.yrel;
 			break;
-			
 		}
 		default:
 			break;
@@ -115,4 +123,9 @@ void GW::InputManager::setWindowDimensions(int width, int height)
 {
 	m_width = width;
 	m_height = height;
+}
+
+int GW::InputManager::getMouseWheelMovement()
+{
+	return m_wheelMovement;
 }
