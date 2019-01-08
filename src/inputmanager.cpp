@@ -1,6 +1,7 @@
 #include <inputmanager.h>
 #include <SDL.h>
 #include <iostream>
+#include <glm/glm.hpp>
 
 GW::InputManager::InputManager()
 {
@@ -145,4 +146,59 @@ void GW::InputManager::setWindowDimensions(int width, int height)
 int GW::InputManager::getMouseWheelMovement()
 {
 	return m_wheelMovement;
+}
+
+void GW::InputManager::addAxis(std::string name, Axis axis)
+{
+	m_axes.insert(std::make_pair(name, axis));
+}
+
+float GW::InputManager::getAxisValue(std::string name)
+{
+	auto it = m_axes.find(name);
+	if (it != m_axes.end()) {
+		Axis axis = it->second;
+		float sum = 0.0f;
+		for (auto input : axis.axisInputs) {
+			sum += input.scale * getValueDirection(input.code, input.type);
+		}
+
+		if(axis.limit)
+			sum = glm::clamp(sum, axis.limitLower, axis.limitUpper);
+
+		return sum;
+	}
+	return 0.0f;
+}
+
+float GW::InputManager::getValueDirection(int code, GW::AXISTYPE type)
+{
+	switch (type) {
+	case GW::AXISTYPE::SDLKEYBOARD:
+		return isKeyDown(code) ? 1.0f : 0.0f;
+		break;
+	case GW::AXISTYPE::SDLMOUSEBUTTON:
+		return isMouseButtonDown(code) ? 1.0f : 0.0f;
+		break;
+	case GW::AXISTYPE::OTHER:
+		//switch here
+		switch (code) {
+		case GW::INPUTCODE::MWHEELUP:
+			return getMouseWheelMovement() > 0 ? 1.0f : 0.0f;
+		case GW::INPUTCODE::MWHEELDOWN:
+			return getMouseWheelMovement() < 0 ? 1.0f : 0.0f;
+		case GW::INPUTCODE::MOUSEYUP:
+			return glm::max((float)getMouseData().yRel, 0.0f);
+		case GW::INPUTCODE::MOUSEYDOWN:
+			return glm::max(-(float)getMouseData().yRel, 0.0f);
+		case GW::INPUTCODE::MOUSEXRIGHT:
+			return glm::max((float)getMouseData().xRel, 0.0f);
+		case GW::INPUTCODE::MOUSEXLEFT:
+			return glm::max(-(float)getMouseData().xRel, 0.0f);
+		default:
+			return 0.0f;
+		}
+	}
+
+	return 0.0f;
 }

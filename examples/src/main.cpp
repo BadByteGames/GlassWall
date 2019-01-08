@@ -15,8 +15,8 @@
 using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
 
-const float MOVE_SPEED = 1.5f;
-const float SENSITIVITY = 90.0f;
+const float MOVE_SPEED = 2.0f;
+const float SENSITIVITY = 120.0f;
 const float PI = 3.14159265359f;
 
 class OneLiner : public GW::Entity {
@@ -49,6 +49,39 @@ public:
 		m_world->getCamera()->setOrthopgraphic(false);
 		
 		angles = glm::vec3(0.0f);
+		
+		GW::InputManager* inputManager = m_world->getInputManager();
+		GW::Axis rotateMonkey;
+		rotateMonkey.axisInputs.emplace_back(GW::INPUTCODE::MWHEELUP, GW::AXISTYPE::OTHER, 1.0f);
+		rotateMonkey.axisInputs.emplace_back(GW::INPUTCODE::MWHEELDOWN, GW::AXISTYPE::OTHER, -1.0f);
+		inputManager->addAxis("rotatemonkey", rotateMonkey);
+
+		GW::Axis lookHorizontal;
+		lookHorizontal.limit = false;
+		lookHorizontal.axisInputs.emplace_back(GW::INPUTCODE::MOUSEXRIGHT, GW::AXISTYPE::OTHER, -1.0f);
+		lookHorizontal.axisInputs.emplace_back(GW::INPUTCODE::MOUSEXLEFT, GW::AXISTYPE::OTHER, 1.0f);
+		inputManager->addAxis("lookhorizontal", lookHorizontal);
+
+
+		GW::Axis lookVertical;
+		lookVertical.limit = false;
+		lookVertical.axisInputs.emplace_back(GW::INPUTCODE::MOUSEYUP, GW::AXISTYPE::OTHER, 1.0f);
+		lookVertical.axisInputs.emplace_back(GW::INPUTCODE::MOUSEYDOWN, GW::AXISTYPE::OTHER, -1.0f);
+		inputManager->addAxis("lookvertical", lookVertical);
+
+		GW::Axis strafe;
+		strafe.axisInputs.emplace_back(SDLK_d, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
+		strafe.axisInputs.emplace_back(SDLK_a, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
+		strafe.axisInputs.emplace_back(SDLK_RIGHT, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
+		strafe.axisInputs.emplace_back(SDLK_LEFT, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
+		inputManager->addAxis("moveright", strafe);
+
+		GW::Axis moveforward;
+		moveforward.axisInputs.emplace_back(SDLK_w, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
+		moveforward.axisInputs.emplace_back(SDLK_s, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
+		moveforward.axisInputs.emplace_back(SDLK_UP, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
+		moveforward.axisInputs.emplace_back(SDLK_DOWN, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
+		inputManager->addAxis("moveforward", moveforward);
 	}
 
 	virtual void update() {
@@ -58,33 +91,16 @@ public:
 		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
 		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
+		glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(inputManager->getAxisValue("moveright") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, inputManager->getAxisValue("moveforward") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f);
+		glm::vec3 newPos = camera->getPosition() + translation;
+		camera->setAbsolutePosition(newPos);
 
-		//quick wasd movement system
-		if (inputManager->isKeyDown(SDLK_w)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, -MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f);
-			glm::vec3 newPos = camera->getPosition() + translation;
-			camera->setAbsolutePosition(newPos);
-		}
-		if (inputManager->isKeyDown(SDLK_a)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(-MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, 0.0f, 0.0f);
-			glm::vec3 newPos = camera->getPosition() + translation;
-			camera->setAbsolutePosition(newPos);
-		}
-		if (inputManager->isKeyDown(SDLK_s)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(0.0f, 0.0f, MOVE_SPEED* fpsCounter->getDeltaTime(), 0.0f);
-			glm::vec3 newPos = camera->getPosition() + translation;
-			camera->setAbsolutePosition(newPos);
-		}
-		if (inputManager->isKeyDown(SDLK_d)) {
-			glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, 0.0f, 0.0f);
-			glm::vec3 newPos = camera->getPosition() + translation;
-			camera->setAbsolutePosition(newPos);
-		}
+		
 		
 		//change camera angles based off mouse motion if mouse locked
 		if (m_mouseLocked) {
-			angles.y += -(float)inputManager->getMouseData().xRel * SENSITIVITY * fpsCounter->getDeltaTime();
-			angles.x += (float)inputManager->getMouseData().yRel * SENSITIVITY * fpsCounter->getDeltaTime();
+			angles.y += inputManager->getAxisValue("lookhorizontal") * SENSITIVITY * fpsCounter->getDeltaTime();
+			angles.x += inputManager->getAxisValue("lookvertical") * SENSITIVITY * fpsCounter->getDeltaTime();
 
 			angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
 
@@ -96,7 +112,7 @@ public:
 			m_world->requestQuit();
 		}
 
-		m_rotationY += (float)inputManager->getMouseWheelMovement() * 15.0f;
+		m_rotationY += inputManager->getAxisValue("rotatemonkey") * 15.0f;
 
 		if (inputManager->mousePressed(SDL_BUTTON_MIDDLE)) {
 			if (m_mouseLocked) {

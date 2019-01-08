@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <settings.h>
 
 namespace GW {
 	//structure for mouse motion data
@@ -14,6 +15,23 @@ namespace GW {
 		int yPos = 0;
 		int xRel = 0;
 		int yRel = 0;
+	};
+
+	//structure use forinput in an axis
+	struct AxisInput {
+		AxisInput(){}
+		AxisInput(int code, GW::AXISTYPE type, float scale):code(code), type(type), scale(scale){}
+
+		int code; //what to check for input, use sdl codes for keyboard and mouse button values but GW::INPUTCODE for other things
+		GW::AXISTYPE type; //stores the type of input the axis will be using use SDLKEYBOARD for key board and SDLMOUSEBUTTON for mouse buttons but OTHER for every other type
+		float scale; //what to multiply value by
+	};
+
+	struct Axis {
+		std::vector<AxisInput> axisInputs; //inputs to use
+		bool limit = true; //wheter it should clamp or not
+		float limitUpper = 1.0f; //what to clamp to if limit is true
+		float limitLower = -1.0f; //what to clamp to if limit is true
 	};
 
 	class InputManager {
@@ -53,7 +71,16 @@ namespace GW {
 		// 0 is no movement
 		// -1 is down
 		int getMouseWheelMovement();
+
+		//add an -1 to +1 axis to check for
+		void addAxis(std::string name, Axis axis);
+
+		//gets value of an axis
+		//returns 0 if not found
+		float getAxisValue(std::string name);
 	private:
+		float getValueDirection(int code, GW::AXISTYPE type);
+
 		//stores key values
 		std::unordered_map<int, bool> m_keyValues;
 
@@ -76,5 +103,8 @@ namespace GW {
 
 		//stores mwheel movement
 		int m_wheelMovement = 0;
+
+		//stores all axes
+		std::unordered_map<std::string, Axis> m_axes;
 	};
 }
