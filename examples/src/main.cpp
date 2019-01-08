@@ -98,7 +98,7 @@ public:
 
 		m_rotationY += (float)inputManager->getMouseWheelMovement() * 15.0f;
 
-		if (inputManager->isMouseButtonDown(SDL_BUTTON_MIDDLE)) {
+		if (inputManager->mousePressed(SDL_BUTTON_MIDDLE)) {
 			if (m_mouseLocked) {
 				m_mouseLocked = false;
 				m_world->getInputManager()->setMouseTrapped(false);

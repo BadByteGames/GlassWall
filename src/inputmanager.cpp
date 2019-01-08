@@ -13,6 +13,9 @@ GW::InputManager::~InputManager()
 
 void GW::InputManager::update()
 {
+	m_keyValuesLast = m_keyValues;
+	m_mouseButtonsLast = m_mouseButtons;
+
 	//reset mouse motion relative
 	m_mouseMotion.xRel = 0;
 	m_mouseMotion.yRel = 0;
@@ -93,15 +96,29 @@ bool GW::InputManager::isKeyDown(int keycode)
 	return false;
 }
 
-bool GW::InputManager::isMouseButtonDown(int keycode)
+bool GW::InputManager::isMouseButtonDown(int buttoncode)
 {
 	//check if button stored in data and then return value if found or false if not
-	auto it = m_mouseButtons.find(keycode);
+	auto it = m_mouseButtons.find(buttoncode);
 	if (it != m_mouseButtons.end()) {
 		//key found, return value
 		return it->second;
 	}
 	return false;
+}
+
+bool GW::InputManager::keyPressed(int keycode)
+{
+	auto it = m_keyValuesLast.find(keycode);
+	bool pressedLastFrame = it != m_keyValuesLast.end() && it->second;
+	return !pressedLastFrame && isKeyDown(keycode);
+}
+
+bool GW::InputManager::mousePressed(int buttoncode)
+{
+	auto it = m_mouseButtonsLast.find(buttoncode);
+	bool pressedLastFrame = it != m_mouseButtonsLast.end() && it->second;
+	return !pressedLastFrame && isMouseButtonDown(buttoncode);
 }
 
 bool GW::InputManager::quitRequested()

@@ -28,7 +28,13 @@ namespace GW {
 		bool isKeyDown(int keycode);
 
 		//gets if mouse button down
-		bool isMouseButtonDown(int keycode);
+		bool isMouseButtonDown(int buttoncode);
+
+		//get if a key was pressed
+		bool keyPressed(int keycode);
+
+		//get if a mouse button was pressed
+		bool mousePressed(int buttoncode);
 
 		//gets whether QUIT has been called
 		bool quitRequested();
@@ -53,6 +59,10 @@ namespace GW {
 
 		//stores mouse values
 		std::unordered_map<int, bool> m_mouseButtons;
+
+		//values from last frame
+		std::unordered_map<int, bool> m_keyValuesLast;
+		std::unordered_map<int, bool> m_mouseButtonsLast;
 
 		//has user requested quit
 		bool m_quitRequested;
