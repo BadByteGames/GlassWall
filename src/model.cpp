@@ -107,7 +107,6 @@ void GW::RenderEngine::Model::draw()
 		glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 	}
 
-	//glm::mat4 modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));
 	glm::mat4 modelTransform = getTransform();
 
 	//set uniforms to proper values
@@ -142,10 +141,36 @@ void GW::RenderEngine::Model::draw()
 			glUniform1i(samplerLocation, i);
 		}
 	}
+
 	std::vector<Light> lights = m_world->getLighting()->getLights();
 	//set all light uniforms
+
+	//set directional light
+	DirectionalLight directional= m_world->getLighting()->getDirectionalLight();
+	GLint directionalAmbientStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.ambientstrength").c_str());
+	if (directionalAmbientStrengthUniform != -1) {
+		glUniform1fv(directionalAmbientStrengthUniform, 1, &directional.ambientStrength);
+	}
+
+	GLint derectionalSpecularStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.specularstrength").c_str());
+	if (derectionalSpecularStrengthUniform != -1) {
+		glUniform1fv(derectionalSpecularStrengthUniform, 1, &directional.specularStrength);
+	}
+
+	GLint derectionalLightColorUniform = glGetUniformLocation(m_program, std::string("directionallight.color").c_str());
+	if (derectionalLightColorUniform != -1) {
+		glUniform3fv(derectionalLightColorUniform, 1, glm::value_ptr(directional.color));
+	}
+
+	GLint derectionalLightDirUniform = glGetUniformLocation(m_program, std::string("directionallight.direction").c_str());
+	if (derectionalLightDirUniform != -1) {
+		glUniform3fv(derectionalLightDirUniform, 1, glm::value_ptr(directional.direction));
+	}
+
+
+	//set point lights
 	for (int i = 0; i < lights.size(); i++) {
-		std::string lightArrayItem = "lights[" + std::to_string(i) + "]";
+		std::string lightArrayItem = "pointlights[" + std::to_string(i) + "]";
 
 		//set each property
 		GLint ambientStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".ambientstrength").c_str());
@@ -158,16 +183,14 @@ void GW::RenderEngine::Model::draw()
 			glUniform1fv(specularStrengthUniform, 1, &lights[i].specularStrength);
 		}
 
-		GLint lightColorUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".lightcolor").c_str());
-		LightColor lightColor = lights[i].color;
+		GLint lightColorUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".color").c_str());
 		if (lightColorUniform != -1) {
-			glUniform3fv(lightColorUniform, 1, glm::value_ptr(glm::vec3(lightColor.r, lightColor.g, lightColor.b)));
+			glUniform3fv(lightColorUniform, 1, glm::value_ptr(lights[i].color));
 		}
 
-		GLint lightPosUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".lightpos").c_str());
-		Position lightPos = lights[i].position;
+		GLint lightPosUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".pos").c_str());
 		if (lightPosUniform != -1) {
-			glUniform3fv(lightPosUniform, 1, glm::value_ptr(glm::vec3(lightPos.x, lightPos.y, lightPos.z)));
+			glUniform3fv(lightPosUniform, 1, glm::value_ptr(lights[i].position));
 		}
 	}
 

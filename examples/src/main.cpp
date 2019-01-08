@@ -91,7 +91,7 @@ public:
 		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
 		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
-		glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(inputManager->getAxisValue("moveright") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, inputManager->getAxisValue("moveforward") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f);
+		glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(inputManager->getAxisValue("moveright") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, inputManager->getAxisValue("moveforward") * MOVE_SPEED * fpsCounter->getDeltaTime(), 1.0f));
 		glm::vec3 newPos = camera->getPosition() + translation;
 		camera->setAbsolutePosition(newPos);
 
@@ -149,9 +149,10 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 8.0f }, 0.5f, 0.1f));
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 1.0f, 0.0f, 0.0f }, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.6f, 0.0f }, { 0.0f, 0.0f, 8.0f }, 0.5f, 0.1f));
+	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.6f, 0.0f, 0.0f }, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
 	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
+	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
 
 	OneLiner* dummy = new OneLiner("OneLiner");
 

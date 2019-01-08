@@ -79,9 +79,10 @@ void GW::InputManager::update()
 			break;
 		}
 		default:
-			break;
+			
 			//unrecognized event, event should be handled
-			std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
+			//std::cout << "Unrecognized event type: " << evnt.type << "!\nPlease contact a dev with this information." << std::endl;
+			break;
 		}
 	}
 }
