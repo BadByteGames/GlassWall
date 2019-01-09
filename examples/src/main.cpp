@@ -19,7 +19,7 @@ const float MOVE_SPEED = 2.0f;
 const float SENSITIVITY = 120.0f;
 const float PI = 3.14159265359f;
 
-class OneLiner : public GW::Entity {
+class Monkey : public GW::Entity {
 public:
 	using GW::Entity::Entity;
 
@@ -33,23 +33,69 @@ public:
 		m_model = new GW::RenderEngine::Model();;
 
 		rootComponent->addChild(m_model);
-		rootComponent->setAbsolutePosition(glm::vec3(0.0f, 0.0f, -4.0f));
+		rootComponent->setAbsolutePosition(m_startPos);
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		//load model
 		m_model->loadFromFile("test.dae");
 
-		//capture mouse in window
-		m_world->getInputManager()->setMouseTrapped(true);
-
 		//set active shader of model
 		m_model->useShader(m_shader);
 		unsigned int texture = Textures::getTexture("MeshTexture.png");
 		Textures::setTextureSlot(texture, 0);
+	}
+
+	virtual void update() {
+
+		GW::InputManager* inputManager = m_world->getInputManager();
+		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
+		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
+
+		m_rotationY += inputManager->getAxisValue("rotatemonkey") * 15.0f;
+	}
+
+	virtual void cleanUp() {
+		//delete shader
+		m_shader.destroy();
+
+		m_model->cleanUp();
+		
+		delete m_model;
+		delete rootComponent;
+	}
+	
+	void setPos(glm::vec3 pos) {
+		if (rootComponent != nullptr) {
+			//set pos
+			rootComponent->setAbsolutePosition(pos);
+		}
+		else {
+			m_startPos = pos;
+		}
+	}
+
+private:
+	GW::RenderEngine::Model* m_model;
+
+	float m_rotationY = 0.0f;
+	
+	glm::vec3 m_startPos = glm::vec3(0.0f);
+	bool m_mouseLocked = true;
+	ShaderProgram m_shader;
+};
+
+class Player: public GW::Entity{
+	using GW::Entity::Entity;
+
+	virtual void entityStart() {
+
+		//capture mouse in window
+		m_world->getInputManager()->setMouseTrapped(true);
+
 		m_world->getCamera()->setOrthopgraphic(false);
-		
+
 		angles = glm::vec3(0.0f);
-		
+
 		GW::InputManager* inputManager = m_world->getInputManager();
 		GW::Axis rotateMonkey;
 		rotateMonkey.axisInputs.emplace_back(GW::INPUTCODE::MWHEELUP, GW::AXISTYPE::OTHER, 1.0f);
@@ -89,14 +135,13 @@ public:
 		GW::RenderEngine::Camera* camera = m_world->getCamera();
 		GW::InputManager* inputManager = m_world->getInputManager();
 		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
-		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
 		glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(inputManager->getAxisValue("moveright") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, inputManager->getAxisValue("moveforward") * MOVE_SPEED * fpsCounter->getDeltaTime(), 1.0f));
 		glm::vec3 newPos = camera->getPosition() + translation;
 		camera->setAbsolutePosition(newPos);
 
-		
-		
+
+
 		//change camera angles based off mouse motion if mouse locked
 		if (m_mouseLocked) {
 			angles.y += inputManager->getAxisValue("lookhorizontal") * SENSITIVITY * fpsCounter->getDeltaTime();
@@ -111,8 +156,6 @@ public:
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
 			m_world->requestQuit();
 		}
-
-		m_rotationY += inputManager->getAxisValue("rotatemonkey") * 15.0f;
 
 		if (inputManager->mousePressed(SDL_BUTTON_MIDDLE)) {
 			if (m_mouseLocked) {
@@ -129,18 +172,13 @@ public:
 	virtual void cleanUp() {
 		//delete shader
 		m_shader.destroy();
-
-		m_model->cleanUp();
-		
-		delete m_model;
-		delete rootComponent;
 	}
 
 private:
-	GW::RenderEngine::Model* m_model;
 
 	float m_rotationY = 0.0f;
 
+	glm::vec3 m_startPos = glm::vec3(0.0f);
 	bool m_mouseLocked = true;
 	ShaderProgram m_shader;
 	glm::vec3 angles;
@@ -154,13 +192,29 @@ int main(int argc, char** argv) {
 	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
 
-	OneLiner* dummy = new OneLiner("OneLiner");
+	Monkey* monkeys[10];
 
-	world.addEntity(dummy);
+	Player* player;
+
+	for(int i = 0; i < 10; i++){
+		Monkey* dummy = new Monkey("monkey");
+
+		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 10.0f, 0.0f, (float)(i % 2) * -5.0f - 5.0f));
+
+		world.addEntity(dummy);
+		monkeys[i] = dummy;
+	}
+
+	player = new Player("player");
+	world.addEntity(player);
 
 	world.start();
 
-	delete dummy;
+	for (int i = 0; i < 10; i++) {
+		delete monkeys[i];
+	}
+
+	delete player;
 	
 	return 0;
 }

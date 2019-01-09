@@ -152,6 +152,11 @@ namespace GW {
 		return &m_fpsCounter;
 	}
 
+	bool World::getWorldStarted()
+	{
+		return m_worldStarted;
+	}
+
 	void World::update()
 	{
 		//call all entity update functions
@@ -169,29 +174,35 @@ namespace GW {
 
 	void World::initComponent(Component * component)
 	{
-		component->m_world = this;
-		for (auto it : component->getChildren()) {
-			initComponent(it);
+		if (component != nullptr) {
+			component->m_world = this;
+			for (auto it : component->getChildren()) {
+				initComponent(it);
+			}
 		}
 	}
 
 	void World::updateComponent(Component * component)
 	{
-		component->update();
-		for (auto it : component->getChildren()) {
-			updateComponent(it);
+		if (component != nullptr) {
+			component->update();
+			for (auto it : component->getChildren()) {
+				updateComponent(it);
+			}
 		}
 	}
 
 	void World::drawComponent(Component * component)
-	{
-		if (component->m_type == "model") {
-			GW::RenderEngine::Model* model = reinterpret_cast<GW::RenderEngine::Model*>(component);
+	{	
+		if (component != nullptr) {
+			if (component->m_type == "model") {
+				GW::RenderEngine::Model* model = reinterpret_cast<GW::RenderEngine::Model*>(component);
 
-			model->draw();
-		}
-		for (auto it : component->getChildren()) {
-			drawComponent(it);
+				model->draw();
+			}
+			for (auto it : component->getChildren()) {
+				drawComponent(it);
+			}
 		}
 	}
 }

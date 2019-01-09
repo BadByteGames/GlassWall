@@ -6,6 +6,7 @@ namespace GW {
 	{
 		m_name = name;
 		m_world = nullptr;
+		rootComponent = nullptr;
 	}
 
 	Entity::~Entity()

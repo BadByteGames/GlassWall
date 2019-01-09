@@ -55,6 +55,9 @@ namespace GW {
 		RenderEngine::Lighting* getLighting();
 
 		FpsCounter* getFpsCounter();
+
+		//has the world started
+		bool getWorldStarted();
 	private:
 		void update();
 
