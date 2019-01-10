@@ -14,6 +14,10 @@ struct PointLight{
 	float specularstrength;
 	vec3 color;
 	vec3 pos;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 struct DirectionalLight{
@@ -32,7 +36,7 @@ void main(void){
 	vec3 normal = normalize(mat3(invertedmodel) * out_normal);
 	vec3 viewdir = normalize(viewerpos - out_position);
 
-	vec4 lighting = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec3 lighting = vec3(0.0f);
 
 	//caluclate directional light (sun)
 	{
@@ -46,14 +50,23 @@ void main(void){
 	}
 
 	for(int i = 0; i < pointlights.length(); i++){
-		vec3 ambient = pointlights[i].color * pointlights[i].ambientstrength;
-		vec3 lightdir = normalize(pointlights[i].pos - out_position);
-		vec3 reflectdir = reflect(-lightdir, normal);
-		vec3 diffusion = pointlights[i].color * max(dot(normal, lightdir), 0.0f);
-		vec3 specular = pointlights[i].color * pointlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 32);
+		if(pointlights[i].constant != 0){
+			vec3 ambient = pointlights[i].color * pointlights[i].ambientstrength;
+			vec3 lightdir = normalize(pointlights[i].pos - out_position);
+			vec3 reflectdir = reflect(-lightdir, normal);
+			vec3 diffusion = pointlights[i].color * max(dot(normal, lightdir), 0.0f);
+			vec3 specular = pointlights[i].color * pointlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 32);
+			
+			float distance = length(pointlights[i].pos - out_position);
+			vec3 attenuation = vec3(pow(pointlights[i].constant + pointlights[i].linear * distance + pointlights[i].quadratic * (distance * distance), -1));    
+			
+			ambient *= attenuation;
+			diffusion *= attenuation;
+			specular *= attenuation;
 
-		lighting.xyz += vec3(ambient  + diffusion + specular);
+			lighting.xyz += ambient + diffusion + specular;
+		}
 	}
 
-	gl_FragColor= vec4(out_color)*texture2D(textureSlot0, out_uv) * lighting;
+	gl_FragColor= vec4(out_color)*texture2D(textureSlot0, out_uv) * vec4(lighting, 1.0);
 }

@@ -187,9 +187,9 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.6f, 0.0f }, { 0.0f, 0.0f, 8.0f }, 0.5f, 0.1f));
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.6f, 0.0f, 0.0f }, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
-	world.getLighting()->addLight(GW::RenderEngine::Light({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f));
+	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 1.0f, 0.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
+	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
+	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
 
 	Monkey* monkeys[10];
@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < 10; i++){
 		Monkey* dummy = new Monkey("monkey");
 
-		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 10.0f, 0.0f, (float)(i % 2) * -5.0f - 5.0f));
+		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 5.0f, 0.0f, (float)(i % 2) * -5.0f - 5.0f));
 
 		world.addEntity(dummy);
 		monkeys[i] = dummy;

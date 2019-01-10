@@ -13,14 +13,14 @@ void GW::RenderEngine::Lighting::setDirectionalLight(const DirectionalLight & li
 	m_directionalLight = light;
 }
 
-void GW::RenderEngine::Lighting::addLight(const Light & light)
+void GW::RenderEngine::Lighting::addPointLight(const PointLight & light)
 {
-	m_lights.push_back(light);
+	m_pointLights.push_back(light);
 }
 
-std::vector<GW::RenderEngine::Light> GW::RenderEngine::Lighting::getLights()
+std::vector<GW::RenderEngine::PointLight> GW::RenderEngine::Lighting::getPointLights()
 {
-	return m_lights;
+	return m_pointLights;
 }
 
 GW::RenderEngine::DirectionalLight GW::RenderEngine::Lighting::getDirectionalLight()

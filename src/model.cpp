@@ -142,7 +142,7 @@ void GW::RenderEngine::Model::draw()
 		}
 	}
 
-	std::vector<Light> lights = m_world->getLighting()->getLights();
+	std::vector<PointLight> pointLights = m_world->getLighting()->getPointLights();
 	//set all light uniforms
 
 	//set directional light
@@ -169,28 +169,43 @@ void GW::RenderEngine::Model::draw()
 
 
 	//set point lights
-	for (int i = 0; i < lights.size(); i++) {
+	for (int i = 0; i < pointLights.size(); i++) {
 		std::string lightArrayItem = "pointlights[" + std::to_string(i) + "]";
 
 		//set each property
 		GLint ambientStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".ambientstrength").c_str());
 		if (ambientStrengthUniform != -1) {
-			glUniform1fv(ambientStrengthUniform, 1, &lights[i].ambientStrength);
+			glUniform1fv(ambientStrengthUniform, 1, &pointLights[i].ambientStrength);
 		}
 	
 		GLint specularStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".specularstrength").c_str());
 		if (specularStrengthUniform != -1) {
-			glUniform1fv(specularStrengthUniform, 1, &lights[i].specularStrength);
+			glUniform1fv(specularStrengthUniform, 1, &pointLights[i].specularStrength);
+		}
+
+		GLint lightConstantUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".constant").c_str());
+		if (lightConstantUniform != -1) {
+			glUniform1fv(lightConstantUniform, 1, &pointLights[i].constant);
+		}
+
+		GLint lightLinearUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".linear").c_str());
+		if (lightLinearUniform != -1) {
+			glUniform1fv(lightLinearUniform, 1, &pointLights[i].linear);
+		}
+
+		GLint lightQuadraticUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".quadratic").c_str());
+		if (lightQuadraticUniform != -1) {
+			glUniform1fv(lightQuadraticUniform, 1, &pointLights[i].quadratic);
 		}
 
 		GLint lightColorUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".color").c_str());
 		if (lightColorUniform != -1) {
-			glUniform3fv(lightColorUniform, 1, glm::value_ptr(lights[i].color));
+			glUniform3fv(lightColorUniform, 1, glm::value_ptr(pointLights[i].color));
 		}
 
 		GLint lightPosUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".pos").c_str());
 		if (lightPosUniform != -1) {
-			glUniform3fv(lightPosUniform, 1, glm::value_ptr(lights[i].position));
+			glUniform3fv(lightPosUniform, 1, glm::value_ptr(pointLights[i].position));
 		}
 	}
 
