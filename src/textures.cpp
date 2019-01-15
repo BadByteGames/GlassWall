@@ -6,6 +6,14 @@
 
 std::unordered_map<std::string, unsigned int> GW::RenderEngine::Textures::m_textureMap;
 
+GW::RenderEngine::Textures::Textures()
+{
+}
+
+GW::RenderEngine::Textures::~Textures()
+{
+}
+
 unsigned int GW::RenderEngine::Textures::getTexture(const std::string & fileName, bool useNearest)
 {
 	//check if image already loaded into memory

@@ -27,6 +27,9 @@ namespace GW {
 
 			//set world rules
 			void setWorld(GW::World* world);
+
+			//set the texture
+			void setTexture(unsigned int textureID);
 		private:
 			//deals with drawing the files during rendering
 			void draw();
@@ -39,6 +42,9 @@ namespace GW {
 
 			//vbo id
 			GLuint m_vbo;
+
+			//texture id
+			GLuint m_texture;
 
 			friend class GW::World;
 		};

@@ -8,6 +8,7 @@
 #include <textures.h>
 #include <string>
 #include <colladaloader.h>
+#include <textures.h>
 #include <lighting.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
@@ -17,6 +18,7 @@ GW::RenderEngine::Model::Model()
 	Component();
 	m_type = "model";
 	m_program = 0;
+	m_texture = 0;
 	m_vbo = 0;
 }
 
@@ -64,6 +66,11 @@ void GW::RenderEngine::Model::setWorld(GW::World * world)
 	m_world = world;
 }
 
+void GW::RenderEngine::Model::setTexture(unsigned int textureID)
+{
+	m_texture = textureID;
+}
+
 void GW::RenderEngine::Model::draw()
 {
 	//start using shader
@@ -71,6 +78,9 @@ void GW::RenderEngine::Model::draw()
 
 	//set the active buffer
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+
+	//override the texture for slot 0
+	Textures::setTextureSlot(m_texture, 0);
 
 	//get all attribs
 	GLint positionAttrib = glGetAttribLocation(m_program, "in_position");

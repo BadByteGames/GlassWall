@@ -42,7 +42,7 @@ public:
 		//set active shader of model
 		m_model->useShader(m_shader);
 		unsigned int texture = Textures::getTexture("MeshTexture.png");
-		Textures::setTextureSlot(texture, 0);
+		m_model->setTexture(texture);
 	}
 
 	virtual void update() {
