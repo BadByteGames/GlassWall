@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <vertex.h>
 #include <component.h>
+#include <textures.h>
 
 namespace GW {
 	class World;
@@ -28,8 +29,8 @@ namespace GW {
 			//set world rules
 			void setWorld(GW::World* world);
 
-			//set the texture
-			void setTexture(unsigned int textureID);
+			//set the material
+			void setMaterial(Material material);
 		private:
 			//deals with drawing the files during rendering
 			void draw();
@@ -43,8 +44,8 @@ namespace GW {
 			//vbo id
 			GLuint m_vbo;
 
-			//texture id
-			GLuint m_texture;
+			//material of model
+			GW::RenderEngine::Material m_material;
 
 			friend class GW::World;
 		};

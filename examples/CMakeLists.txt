@@ -19,4 +19,5 @@ configure_file(glsl/debug.vert ${CMAKE_BINARY_DIR}/examples/debug.vert COPYONLY)
 
 configure_file(resources/Floor.png ${CMAKE_BINARY_DIR}/examples/Floor.png COPYONLY)
 configure_file(resources/MeshTexture.png ${CMAKE_BINARY_DIR}/examples/MeshTexture.png COPYONLY)
+configure_file(resources/MeshSpecular.png ${CMAKE_BINARY_DIR}/examples/MeshSpecular.png COPYONLY)
 configure_file(resources/test.dae ${CMAKE_BINARY_DIR}/examples/test.dae COPYONLY)

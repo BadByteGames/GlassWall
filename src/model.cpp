@@ -18,7 +18,7 @@ GW::RenderEngine::Model::Model()
 	Component();
 	m_type = "model";
 	m_program = 0;
-	m_texture = 0;
+	m_material = Material(0, 0);
 	m_vbo = 0;
 }
 
@@ -66,9 +66,9 @@ void GW::RenderEngine::Model::setWorld(GW::World * world)
 	m_world = world;
 }
 
-void GW::RenderEngine::Model::setTexture(unsigned int textureID)
+void GW::RenderEngine::Model::setMaterial(Material material)
 {
-	m_texture = textureID;
+	m_material = material;
 }
 
 void GW::RenderEngine::Model::draw()
@@ -79,8 +79,9 @@ void GW::RenderEngine::Model::draw()
 	//set the active buffer
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
-	//override the texture for slot 0
-	Textures::setTextureSlot(m_texture, 0);
+	//override the texture for slot 0 and 1
+	Textures::setTextureSlot(m_material.diffuseID, 0);
+	Textures::setTextureSlot(m_material.specularID, 1);
 
 	//get all attribs
 	GLint positionAttrib = glGetAttribLocation(m_program, "in_position");

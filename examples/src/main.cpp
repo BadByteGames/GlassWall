@@ -42,7 +42,8 @@ public:
 		//set active shader of model
 		m_model->useShader(m_shader);
 		unsigned int texture = Textures::getTexture("MeshTexture.png");
-		m_model->setTexture(texture);
+		unsigned int specular = Textures::getTexture("MeshSpecular.png");
+		m_model->setMaterial({ texture, specular });
 	}
 
 	virtual void update() {
@@ -142,7 +143,7 @@ class Player: public GW::Entity{
 		
 		GW::RenderEngine::PointLight startLight = m_world->getLighting()->getPointLight(0);
 		startLight.position = camera->getPosition();
-		m_world->getLighting()->setPointLight(0, startLight);
+		//m_world->getLighting()->setPointLight(0, startLight);
 
 
 		//change camera angles based off mouse motion if mouse locked
@@ -190,7 +191,7 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
+	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.14f, 0.07f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));

@@ -5,6 +5,13 @@
 
 namespace GW {
 	namespace RenderEngine {
+		struct Material {
+			Material(){ }
+			Material(unsigned int diffuseID, unsigned int specularID): diffuseID(diffuseID), specularID(specularID){}
+			unsigned int diffuseID;
+			unsigned int specularID;
+		};
+
 		class Textures {
 		public:
 			Textures();
