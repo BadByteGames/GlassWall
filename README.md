@@ -6,6 +6,7 @@ Glass Wall requires the following packages to be installed on your computer:
 SDL2
 glew
 glm
+tinyxml2
 
 Glass Wall comes with the following included:
 stb_image.h
