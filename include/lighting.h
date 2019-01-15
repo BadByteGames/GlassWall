@@ -55,6 +55,8 @@ namespace GW {
 			
 			void setPointLight(unsigned int index, const PointLight& light);
 			
+			PointLight getPointLight(unsigned int index);
+
 			std::vector<PointLight> getPointLights();
 
 			DirectionalLight getDirectionalLight();

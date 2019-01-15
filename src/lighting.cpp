@@ -25,6 +25,15 @@ void GW::RenderEngine::Lighting::setPointLight(unsigned int index, const PointLi
 	}
 }
 
+GW::RenderEngine::PointLight GW::RenderEngine::Lighting::getPointLight(unsigned int index)
+{
+	if (index < m_pointLights.size()) {
+		return m_pointLights[index];
+	}
+	
+	return GW::RenderEngine::PointLight();
+}
+
 std::vector<GW::RenderEngine::PointLight> GW::RenderEngine::Lighting::getPointLights()
 {
 	return m_pointLights;

@@ -140,7 +140,9 @@ class Player: public GW::Entity{
 		glm::vec3 newPos = camera->getPosition() + translation;
 		camera->setAbsolutePosition(newPos);
 		
-		m_world->getLighting()->setPointLight(0, GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, camera->getPosition(), 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
+		GW::RenderEngine::PointLight startLight = m_world->getLighting()->getPointLight(0);
+		startLight.position = camera->getPosition();
+		m_world->getLighting()->setPointLight(0, startLight);
 
 
 		//change camera angles based off mouse motion if mouse locked
