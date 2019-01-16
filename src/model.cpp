@@ -158,24 +158,26 @@ void GW::RenderEngine::Model::draw()
 
 	//set directional light
 	DirectionalLight directional= m_world->getLighting()->getDirectionalLight();
-	GLint directionalAmbientStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.ambientstrength").c_str());
-	if (directionalAmbientStrengthUniform != -1) {
-		glUniform1fv(directionalAmbientStrengthUniform, 1, &directional.ambientStrength);
-	}
+	if (directional.color != glm::vec3(0.0f)) {
+		GLint directionalAmbientStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.ambientstrength").c_str());
+		if (directionalAmbientStrengthUniform != -1) {
+			glUniform1fv(directionalAmbientStrengthUniform, 1, &directional.ambientStrength);
+		}
 
-	GLint derectionalSpecularStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.specularstrength").c_str());
-	if (derectionalSpecularStrengthUniform != -1) {
-		glUniform1fv(derectionalSpecularStrengthUniform, 1, &directional.specularStrength);
-	}
+		GLint derectionalSpecularStrengthUniform = glGetUniformLocation(m_program, std::string("directionallight.specularstrength").c_str());
+		if (derectionalSpecularStrengthUniform != -1) {
+			glUniform1fv(derectionalSpecularStrengthUniform, 1, &directional.specularStrength);
+		}
 
-	GLint derectionalLightColorUniform = glGetUniformLocation(m_program, std::string("directionallight.color").c_str());
-	if (derectionalLightColorUniform != -1) {
-		glUniform3fv(derectionalLightColorUniform, 1, glm::value_ptr(directional.color));
-	}
+		GLint derectionalLightColorUniform = glGetUniformLocation(m_program, std::string("directionallight.color").c_str());
+		if (derectionalLightColorUniform != -1) {
+			glUniform3fv(derectionalLightColorUniform, 1, glm::value_ptr(directional.color));
+		}
 
-	GLint derectionalLightDirUniform = glGetUniformLocation(m_program, std::string("directionallight.direction").c_str());
-	if (derectionalLightDirUniform != -1) {
-		glUniform3fv(derectionalLightDirUniform, 1, glm::value_ptr(directional.direction));
+		GLint derectionalLightDirUniform = glGetUniformLocation(m_program, std::string("directionallight.direction").c_str());
+		if (derectionalLightDirUniform != -1) {
+			glUniform3fv(derectionalLightDirUniform, 1, glm::value_ptr(directional.direction));
+		}
 	}
 
 

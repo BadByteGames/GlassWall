@@ -16,7 +16,7 @@ using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
 
 const float MOVE_SPEED = 2.0f;
-const float SENSITIVITY = 2.5f;
+const float SENSITIVITY = 1.0f;
 const float PI = 3.14159265359f;
 
 class Monkey : public GW::Entity {
@@ -191,7 +191,7 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.14f, 0.07f));
+	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.14f, 0.07f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	

@@ -58,7 +58,7 @@ namespace GW {
 
 		struct DirectionalLight
 		{
-			DirectionalLight() {}
+			DirectionalLight() { color = glm::vec3(0.0f); }
 			DirectionalLight(glm::vec3 color, glm::vec3 direction, float specularStrength, float ambientStrength) :color(color),
 				direction(direction),
 				specularStrength(specularStrength),
