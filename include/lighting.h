@@ -31,6 +31,31 @@ namespace GW {
 			float quadratic;
 		};
 
+		struct SpotLight {
+			SpotLight(){}
+			SpotLight(glm::vec3 color,
+				glm::vec3 position,
+				glm::vec3 direction,
+				float cutoff, //<<cutoff angle in degrees
+				float specularStrength,
+				float ambientStrength
+			) : color(color),
+				position(position),
+				direction(direction),
+				cutoff(cutoff),
+				ambientStrength(ambientStrength),
+				specularStrength(specularStrength){}
+
+			glm::vec3 color;
+			glm::vec3 position;
+			glm::vec3 direction;
+			//in degrees
+			float cutoff;
+
+			float specularStrength;
+			float ambientStrength;
+		};
+
 		struct DirectionalLight
 		{
 			DirectionalLight() {}
@@ -53,16 +78,22 @@ namespace GW {
 
 			void addPointLight(const PointLight& light);
 			
+			void addSpotLight(const SpotLight& light);
+
 			void setPointLight(unsigned int index, const PointLight& light);
 			
+			void setSpotLight(unsigned int index, const SpotLight& light);
+
 			PointLight getPointLight(unsigned int index);
 
 			std::vector<PointLight> getPointLights();
+			std::vector<SpotLight> getSpotLights();
 
 			DirectionalLight getDirectionalLight();
 		private:
 			DirectionalLight m_directionalLight;
 			std::vector<PointLight> m_pointLights;
+			std::vector<SpotLight> m_spotLights;
 		};
 	}
 }

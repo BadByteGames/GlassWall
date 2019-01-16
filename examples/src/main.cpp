@@ -16,7 +16,7 @@ using GW::RenderEngine::ShaderProgram;
 using GW::RenderEngine::Textures;
 
 const float MOVE_SPEED = 2.0f;
-const float SENSITIVITY = 120.0f;
+const float SENSITIVITY = 2.5f;
 const float PI = 3.14159265359f;
 
 class Monkey : public GW::Entity {
@@ -141,20 +141,20 @@ class Player: public GW::Entity{
 		glm::vec3 newPos = camera->getPosition() + translation;
 		camera->setAbsolutePosition(newPos);
 		
-		GW::RenderEngine::PointLight startLight = m_world->getLighting()->getPointLight(0);
-		startLight.position = camera->getPosition();
-		//m_world->getLighting()->setPointLight(0, startLight);
-
-
 		//change camera angles based off mouse motion if mouse locked
 		if (m_mouseLocked) {
-			angles.y += inputManager->getAxisValue("lookhorizontal") * SENSITIVITY * fpsCounter->getDeltaTime();
-			angles.x += inputManager->getAxisValue("lookvertical") * SENSITIVITY * fpsCounter->getDeltaTime();
+			angles.y += inputManager->getAxisValue("lookhorizontal") * SENSITIVITY;
+			angles.x += inputManager->getAxisValue("lookvertical") * SENSITIVITY;
 
 			angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
 
 			camera->setRotation(angles);
 		}
+
+		GW::RenderEngine::SpotLight startLight = m_world->getLighting()->getSpotLights()[0];
+		startLight.position = camera->getPosition();
+		startLight.direction =  glm::rotate(glm::mat4(1.0f), glm::radians(angles.y), glm::vec3(0.0f, 1.0f, 0.0f)) *  glm::rotate(glm::mat4(1.0f), glm::radians(angles.x), glm::vec3(1.0f, 0.0f, 0.0f))* glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
+		m_world->getLighting()->setSpotLight(0, startLight);
 
 		//request quit on escape
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
@@ -194,6 +194,8 @@ int main(int argc, char** argv) {
 	world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.14f, 0.07f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
+	
+	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 15.0f, 0.5f, 0.1f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
 
 	Monkey* monkeys[10];

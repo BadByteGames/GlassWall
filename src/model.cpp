@@ -220,6 +220,45 @@ void GW::RenderEngine::Model::draw()
 		}
 	}
 
+
+	std::vector<SpotLight> spotLights = m_world->getLighting()->getSpotLights();
+	//set spot lights
+	for (int i = 0; i < spotLights.size(); i++) {
+		std::string lightArrayItem = "spotlights[" + std::to_string(i) + "]";
+
+		//set each property
+		GLint lightColorUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".color").c_str());
+		if (lightColorUniform != -1) {
+			glUniform3fv(lightColorUniform, 1, glm::value_ptr(spotLights[i].color));
+		}
+
+		GLint lightPosUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".pos").c_str());
+		if (lightPosUniform != -1) {
+			glUniform3fv(lightPosUniform, 1, glm::value_ptr(spotLights[i].position));
+		}
+
+		GLint lightDirUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".direction").c_str());
+		if (lightDirUniform != -1) {
+			glUniform3fv(lightDirUniform, 1, glm::value_ptr(spotLights[i].direction));
+		}
+
+		GLint cutoffUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".cutoff").c_str());
+		float calculatedCutoff = glm::cos(glm::radians(spotLights[i].cutoff));
+		if (cutoffUniform != -1) {
+			glUniform1fv(cutoffUniform, 1, &calculatedCutoff);
+		}
+
+		GLint ambientStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".ambientstrength").c_str());
+		if (ambientStrengthUniform != -1) {
+			glUniform1fv(ambientStrengthUniform, 1, &spotLights[i].ambientStrength);
+		}
+
+		GLint specularStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".specularstrength").c_str());
+		if (specularStrengthUniform != -1) {
+			glUniform1fv(specularStrengthUniform, 1, &spotLights[i].specularStrength);
+		}
+	}
+
 	//draw shapes
 	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)m_vertices.size());
 

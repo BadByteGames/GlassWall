@@ -21,6 +21,17 @@ struct PointLight{
 	float quadratic;
 };
 
+struct SpotLight{
+	vec3 color;
+	vec3 pos;
+	vec3 direction;
+
+	float cutoff;
+	float ambientstrength;
+	float specularstrength;
+};
+
+
 struct DirectionalLight{
 	float ambientstrength;
 	float specularstrength;
@@ -32,6 +43,8 @@ uniform DirectionalLight directionallight;
 
 uniform PointLight pointlights[32];
 
+uniform SpotLight spotlights[32];
+
 out vec4 gl_FragColor;
 void main(void){
 	vec3 normal = normalize(mat3(invertedmodel) * out_normal);
@@ -39,8 +52,8 @@ void main(void){
 
 	vec3 lighting = vec3(0.0f);
 
-	vec3 diffuseTex = vec3(texture2D(textureSlot0, out_uv));
-	vec3 specularTex = vec3(texture2D(textureSlot1, out_uv));
+	vec3 diffusetex = vec3(texture2D(textureSlot0, out_uv));
+	vec3 speculartex = vec3(texture2D(textureSlot1, out_uv));
 	//caluclate directional light (sun)
 	{
 		vec3 ambient = directionallight.color * directionallight.ambientstrength;
@@ -49,7 +62,7 @@ void main(void){
 		vec3 diffusion = directionallight.color * max(dot(normal, lightdir), 0.0f);
 		vec3 specular = directionallight.color * directionallight.specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 32);
 
-		lighting.xyz += vec3(ambient * diffuseTex  + diffusion  * diffuseTex + specular * specularTex);
+		lighting.xyz += vec3(ambient * diffusetex  + diffusion  * diffusetex + specular * speculartex);
 	}
 	
 	for(int i = 0; i < pointlights.length(); i++){
@@ -63,11 +76,30 @@ void main(void){
 			float distance = length(pointlights[i].pos - out_position);
 			vec3 attenuation = vec3(pow(pointlights[i].constant + pointlights[i].linear * distance + pointlights[i].quadratic * (distance * distance), -1));    
 			
-			ambient *= diffuseTex * attenuation;
-			diffusion *= diffuseTex * attenuation;
-			specular *= specularTex * attenuation;
+			ambient *= diffusetex * attenuation;
+			diffusion *= diffusetex * attenuation;
+			specular *= speculartex * attenuation;
 
 			lighting.xyz += ambient + diffusion + specular;
+		}
+	}
+
+	for(int i = 0; i < spotlights.length(); i++){
+		vec3 lightdir = normalize(spotlights[i].pos - out_position);
+		float theta = dot(lightdir, normalize(-spotlights[i].direction));
+    
+		if(theta > spotlights[i].cutoff) 
+		{   
+			vec3 ambient = diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
+			vec3 lightdir = normalize(spotlights[i].pos - out_position);
+			vec3 reflectdir = reflect(-lightdir, normal);
+			vec3 diffusion = diffusetex * spotlights[i].color * max(dot(normal, lightdir), 0.0f);
+			vec3 specular = speculartex * spotlights[i].color * spotlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 64);
+			
+
+			lighting.xyz += diffusion + ambient + specular;
+		}else{
+			lighting.xyz += diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
 		}
 	}
 
