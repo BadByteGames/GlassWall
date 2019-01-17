@@ -36,24 +36,36 @@ namespace GW {
 			SpotLight(glm::vec3 color,
 				glm::vec3 position,
 				glm::vec3 direction,
-				float cutoff, //<<cutoff angle in degrees
 				float specularStrength,
-				float ambientStrength
+				float ambientStrength,
+				float cutoff, //<<cutoff angle in degrees
+				float constant,
+				float linear,
+				float quadratic
 			) : color(color),
 				position(position),
 				direction(direction),
-				cutoff(cutoff),
 				ambientStrength(ambientStrength),
-				specularStrength(specularStrength){}
+				specularStrength(specularStrength),
+				cutoff(cutoff),
+				constant(constant),
+				linear(linear),
+				quadratic(quadratic)
+				{}
 
 			glm::vec3 color;
 			glm::vec3 position;
 			glm::vec3 direction;
-			//in degrees
-			float cutoff;
 
 			float specularStrength;
 			float ambientStrength;
+
+			//in degrees
+			float cutoff;
+
+			float constant;
+			float linear;
+			float quadratic;
 		};
 
 		struct DirectionalLight

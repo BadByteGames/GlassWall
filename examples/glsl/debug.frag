@@ -29,6 +29,10 @@ struct SpotLight{
 	float cutoff;
 	float ambientstrength;
 	float specularstrength;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 
@@ -85,21 +89,27 @@ void main(void){
 	}
 
 	for(int i = 0; i < spotlights.length(); i++){
-		vec3 lightdir = normalize(spotlights[i].pos - out_position);
-		float theta = dot(lightdir, normalize(-spotlights[i].direction));
-    
-		if(theta > spotlights[i].cutoff) 
-		{   
-			vec3 ambient = diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
+		if(spotlights[i].constant != 0){
 			vec3 lightdir = normalize(spotlights[i].pos - out_position);
-			vec3 reflectdir = reflect(-lightdir, normal);
-			vec3 diffusion = diffusetex * spotlights[i].color * max(dot(normal, lightdir), 0.0f);
-			vec3 specular = speculartex * spotlights[i].color * spotlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 64);
+			float theta = dot(lightdir, normalize(-spotlights[i].direction));
+
+			float distance = length(spotlights[i].pos - out_position);
+			vec3 attenuation = vec3(pow(spotlights[i].constant + spotlights[i].linear * distance + spotlights[i].quadratic * (distance * distance), -1));
+			
+			
+			if(theta > spotlights[i].cutoff) 
+			{   
+				vec3 ambient = diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
+				vec3 lightdir = normalize(spotlights[i].pos - out_position);
+				vec3 reflectdir = reflect(-lightdir, normal);
+				vec3 diffusion = diffusetex * spotlights[i].color * max(dot(normal, lightdir), 0.0f);
+				vec3 specular = speculartex * spotlights[i].color * spotlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 64);
 			
 
-			lighting.xyz += diffusion + ambient + specular;
-		}else{
-			lighting.xyz += diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
+				lighting.xyz += (diffusion + ambient + specular) * attenuation;
+			}else{
+				lighting.xyz += diffusetex * spotlights[i].color * spotlights[i].ambientstrength * attenuation;
+			}
 		}
 	}
 

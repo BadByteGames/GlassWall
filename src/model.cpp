@@ -259,6 +259,21 @@ void GW::RenderEngine::Model::draw()
 		if (specularStrengthUniform != -1) {
 			glUniform1fv(specularStrengthUniform, 1, &spotLights[i].specularStrength);
 		}
+
+		GLint lightConstantUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".constant").c_str());
+		if (lightConstantUniform != -1) {
+			glUniform1fv(lightConstantUniform, 1, &spotLights[i].constant);
+		}
+
+		GLint lightLinearUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".linear").c_str());
+		if (lightLinearUniform != -1) {
+			glUniform1fv(lightLinearUniform, 1, &spotLights[i].linear);
+		}
+
+		GLint lightQuadraticUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".quadratic").c_str());
+		if (lightQuadraticUniform != -1) {
+			glUniform1fv(lightQuadraticUniform, 1, &spotLights[i].quadratic);
+		}
 	}
 
 	//draw shapes
