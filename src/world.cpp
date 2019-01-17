@@ -67,9 +67,7 @@ namespace GW {
 			}
 						
 			//draw entity models
-			for (auto ent : m_entities) {
-				draw();
-			}
+			draw();
 
 			//swap buffers
 			m_window->swapBuffers();
