@@ -250,6 +250,12 @@ void GW::RenderEngine::Model::draw()
 			glUniform1fv(cutoffUniform, 1, &calculatedCutoff);
 		}
 
+		GLint outerCutoffUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".outercutoff").c_str());
+		float calculatedOuterCutoff = glm::cos(glm::radians(spotLights[i].outerCutoff));
+		if (cutoffUniform != -1) {
+			glUniform1fv(outerCutoffUniform, 1, &calculatedOuterCutoff);
+		}
+
 		GLint ambientStrengthUniform = glGetUniformLocation(m_program, std::string(lightArrayItem + ".ambientstrength").c_str());
 		if (ambientStrengthUniform != -1) {
 			glUniform1fv(ambientStrengthUniform, 1, &spotLights[i].ambientStrength);

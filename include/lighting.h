@@ -39,6 +39,7 @@ namespace GW {
 				float specularStrength,
 				float ambientStrength,
 				float cutoff, //<<cutoff angle in degrees
+				float outerCutoff, //<<outer cutoff angle in degrees
 				float constant,
 				float linear,
 				float quadratic
@@ -48,6 +49,7 @@ namespace GW {
 				ambientStrength(ambientStrength),
 				specularStrength(specularStrength),
 				cutoff(cutoff),
+				outerCutoff(outerCutoff),
 				constant(constant),
 				linear(linear),
 				quadratic(quadratic)
@@ -62,6 +64,7 @@ namespace GW {
 
 			//in degrees
 			float cutoff;
+			float outerCutoff;			
 
 			float constant;
 			float linear;

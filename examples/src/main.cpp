@@ -195,7 +195,7 @@ int main(int argc, char** argv) {
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	
-	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 15.0f, 1.0f, 0.14f, 0.07f));
+	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 1.5f, 17.5, 1.0f, 0.14f, 0.07f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
 
 	Monkey* monkeys[10];

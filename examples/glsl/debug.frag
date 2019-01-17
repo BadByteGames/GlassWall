@@ -27,6 +27,7 @@ struct SpotLight{
 	vec3 direction;
 
 	float cutoff;
+	float outercutoff;
 	float ambientstrength;
 	float specularstrength;
 
@@ -92,21 +93,22 @@ void main(void){
 		if(spotlights[i].constant != 0){
 			vec3 lightdir = normalize(spotlights[i].pos - out_position);
 			float theta = dot(lightdir, normalize(-spotlights[i].direction));
+			float epsilon   = spotlights[i].cutoff - spotlights[i].outercutoff;
+			float intensity = clamp((theta - spotlights[i].outercutoff) / epsilon, 0.0, 1.0); 
 
 			float distance = length(spotlights[i].pos - out_position);
 			vec3 attenuation = vec3(pow(spotlights[i].constant + spotlights[i].linear * distance + spotlights[i].quadratic * (distance * distance), -1));
 			
 			
-			if(theta > spotlights[i].cutoff) 
+			if(theta > spotlights[i].outercutoff) 
 			{   
 				vec3 ambient = diffusetex * spotlights[i].color * spotlights[i].ambientstrength;
 				vec3 lightdir = normalize(spotlights[i].pos - out_position);
 				vec3 reflectdir = reflect(-lightdir, normal);
 				vec3 diffusion = diffusetex * spotlights[i].color * max(dot(normal, lightdir), 0.0f);
 				vec3 specular = speculartex * spotlights[i].color * spotlights[i].specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 64);
-			
-
-				lighting.xyz += (diffusion + ambient + specular) * attenuation;
+				
+				lighting.xyz += (diffusion * intensity + ambient + specular * intensity ) * attenuation;
 			}else{
 				lighting.xyz += diffusetex * spotlights[i].color * spotlights[i].ambientstrength * attenuation;
 			}
