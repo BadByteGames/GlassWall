@@ -13,6 +13,8 @@ using tinyxml2::XMLElement;
 using tinyxml2::XMLAttribute;
 using tinyxml2::XMLText;
 
+std::unordered_map <std::string, std::vector<GW::RenderEngine::Vertex>> GW::RenderEngine::ColladaLoader::m_meshes;
+
 GW::RenderEngine::ColladaLoader::ColladaLoader()
 {
 }
@@ -188,6 +190,20 @@ void GW::RenderEngine::ColladaLoader::loadFromFile(std::string fileName)
 	}
 	else {
 		std::cout << "Couldn't load file: " << fileName << std::endl;
+	}
+}
+
+void GW::RenderEngine::ColladaLoader::loadModel(std::string fileName)
+{
+	auto it = m_meshes.find(fileName);
+	if (it != m_meshes.end()) {
+		//just set mesh data
+		m_vertices = it->second;
+	}
+	else {
+		//actually load data from file
+		loadFromFile(fileName);
+		m_meshes.insert(std::make_pair(fileName, m_vertices));
 	}
 }
 

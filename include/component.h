@@ -14,6 +14,8 @@ namespace GW {
 
 		virtual void update();
 
+		virtual void draw();
+
 		void addChild(Component* component);
 
 		void setAbsolutePosition(glm::vec3 position);

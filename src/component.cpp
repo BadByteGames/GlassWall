@@ -26,6 +26,11 @@ void GW::Component::update()
 {
 }
 
+void GW::Component::draw()
+{
+
+}
+
 void GW::Component::addChild(Component * component)
 {
 	component->m_parent = this;

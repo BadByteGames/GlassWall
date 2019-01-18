@@ -22,6 +22,7 @@ namespace GW {
 
 			//what shader the model should use
 			void useShader(const ShaderProgram& shader);
+			void useShader(const unsigned int& shaderID);
 
 			//clean up internals
 			void cleanUp();
@@ -31,10 +32,10 @@ namespace GW {
 
 			//set the material
 			void setMaterial(Material material);
-		private:
-			//deals with drawing the files during rendering
-			void draw();
 
+			//deals with drawing the files during rendering
+			virtual void draw();
+		private:
 			//stores all vertex data
 			std::vector<Vertex> m_vertices;
 

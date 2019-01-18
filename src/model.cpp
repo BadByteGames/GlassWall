@@ -29,7 +29,7 @@ GW::RenderEngine::Model::~Model()
 void GW::RenderEngine::Model::loadFromFile(std::string fileName)
 {
 	ColladaLoader colladaLoader;
-	colladaLoader.loadFromFile(fileName);
+	colladaLoader.loadModel(fileName);
 
 	m_vertices = colladaLoader.getVertices();
 
@@ -52,6 +52,10 @@ void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 {
 	//set shader to use to shader id
 	m_program = shader.getProgram();
+}
+
+void GW::RenderEngine::Model::useShader(const unsigned int& shaderID) {
+	m_program = shaderID;
 }
 
 void GW::RenderEngine::Model::cleanUp()

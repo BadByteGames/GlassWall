@@ -19,7 +19,6 @@ unsigned int GW::RenderEngine::Textures::getTexture(const std::string & fileName
 	//check if image already loaded into memory
 	auto it = m_textureMap.find(fileName);
 	if (it != m_textureMap.end()) {
-		std::cout << "Cached texture: " << fileName << std::endl;
 
 		//texture already loaded, return id
 		return it->second;
@@ -67,8 +66,6 @@ unsigned int GW::RenderEngine::Textures::getTexture(const std::string & fileName
 
 		//cache the texture id
 		m_textureMap.insert(std::make_pair(fileName, textureId));
-
-		std::cout << "Loaded texture: " << fileName << std::endl;
 
 		//return the id
 		return textureId;

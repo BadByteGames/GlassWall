@@ -20,10 +20,13 @@ namespace GW {
 			~ColladaLoader();
 
 			//load the image from a file
-			void loadFromFile(std::string fileName);
+			void loadModel(std::string fileName);
 
 			std::vector<GW::RenderEngine::Vertex> getVertices();
 		private:
+			//function to run if not cached
+			void loadFromFile(std::string fileName);
+
 			//list of source values
 			std::unordered_map<std::string, std::vector<float>> m_sources;
 
@@ -34,6 +37,9 @@ namespace GW {
 			std::vector<int> m_indicies;
 
 			std::vector<GW::RenderEngine::Vertex> m_vertices;
+
+			//store all loaded meshes for caching
+			static std::unordered_map < std::string, std::vector<GW::RenderEngine::Vertex>> m_meshes;
 		};
 	}
 };

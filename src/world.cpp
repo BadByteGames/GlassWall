@@ -193,11 +193,7 @@ namespace GW {
 	void World::drawComponent(Component * component)
 	{	
 		if (component != nullptr) {
-			if (component->m_type == "model") {
-				GW::RenderEngine::Model* model = reinterpret_cast<GW::RenderEngine::Model*>(component);
-
-				model->draw();
-			}
+			component->draw();
 			for (auto it : component->getChildren()) {
 				drawComponent(it);
 			}
