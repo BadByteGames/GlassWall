@@ -6,6 +6,7 @@ find_package(SDL2 REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm REQUIRED)
 find_package(tinyxml2 REQUIRED)
+find_package(bullet REQUIRED)
 
 find_package(OpenGL REQUIRED)
 
@@ -55,6 +56,7 @@ target_include_directories(GlassWall
 		${GLEW_INCLUDE_DIR}
 		${GLM_INCLUDE_DIR}
 		${tinyxml2_INCLUDE_DIR}
+		${BULLET_INCLUDE_DIR}
 )
 
 target_link_libraries(GlassWall 
@@ -63,7 +65,8 @@ PUBLIC
 	SDL2::SDL2main
 	${OPENGL_gl_LIBRARY}
 	${GLEW_LIBRARIES}
-	tinyxml2)
+	tinyxml2
+	${BULLET_LIBRARIES})
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)
 

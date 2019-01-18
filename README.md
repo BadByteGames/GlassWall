@@ -7,6 +7,7 @@ SDL2
 glew
 glm
 tinyxml2
+bullet3
 
 Glass Wall comes with the following included:
 stb_image.h
