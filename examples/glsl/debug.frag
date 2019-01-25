@@ -67,7 +67,11 @@ void main(void){
 		vec3 diffusion = directionallight.color * max(dot(normal, lightdir), 0.0f);
 		vec3 specular = directionallight.color * directionallight.specularstrength * pow(max(dot(viewdir, reflectdir), 0.0), 32);
 
-		lighting.xyz += vec3(ambient * diffusetex  + diffusion  * diffusetex + specular * speculartex);
+		ambient *= diffusetex;
+		diffusion *= diffusetex;
+		specular *= speculartex;
+
+		lighting.xyz += ambient + diffusion + specular;
 	}
 	
 	for(int i = 0; i < pointlights.length(); i++){

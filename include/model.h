@@ -20,6 +20,9 @@ namespace GW {
 			//loads a model from a file to be used when rendered from a .dae
 			void loadFromFile(std::string fileName);
 
+			//sets the model to a box with the matching dimensions
+			void setBox(glm::vec3 dims);
+
 			//what shader the model should use
 			void useShader(const ShaderProgram& shader);
 			void useShader(const unsigned int& shaderID);

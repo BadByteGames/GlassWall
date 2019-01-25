@@ -8,6 +8,7 @@
 #include <textures.h>
 #include <inputmanager.h>
 #include <lighting.h>
+#include <entities/staticblock.h>
 #include <glm\gtc\matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm\gtx\string_cast.hpp>
@@ -90,6 +91,9 @@ class Player: public GW::Entity{
 
 	virtual void entityStart() {
 
+		//compile shaders on entity start
+		m_shader.compileShadersFromFile("debug.vert", "debug.frag");
+
 		//capture mouse in window
 		m_world->getInputManager()->setMouseTrapped(true);
 
@@ -129,6 +133,16 @@ class Player: public GW::Entity{
 		moveforward.axisInputs.emplace_back(SDLK_UP, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
 		moveforward.axisInputs.emplace_back(SDLK_DOWN, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
 		inputManager->addAxis("moveforward", moveforward);
+
+		//create a static block in the world
+		m_wall = new GW::StaticBlock("block");
+		m_world->addEntity(m_wall);
+		m_wall->setDimensions(glm::vec3(0.5f));
+		m_wall->setPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
+		m_wall->setOrientation(glm::vec3(0.0f, 0.0f, 0.0f));
+		m_wall->setShader(m_shader);
+		m_wall->useMaterial(GW::RenderEngine::Material(GW::RenderEngine::Textures::getTexture("Floor.png"), 0));
+		m_world->getCamera()->setAbsolutePosition(glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	virtual void update() {
@@ -186,6 +200,8 @@ private:
 	bool m_mouseLocked = true;
 	ShaderProgram m_shader;
 	glm::vec3 angles;
+
+	GW::StaticBlock* m_wall;
 };
 
 int main(int argc, char** argv) {
@@ -195,8 +211,8 @@ int main(int argc, char** argv) {
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
 	
-	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 1.5f, 17.5, 1.0f, 0.14f, 0.07f));
-	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, 0.0f}, 0.5f, 0.1f));
+	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 9.5f, 25.5f, 1.0f, 0.14f, 0.07f));
+	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, -0.2f}, 0.5f, 0.1f));
 
 	Monkey* monkeys[10];
 
@@ -205,7 +221,7 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < 10; i++){
 		Monkey* dummy = new Monkey("monkey");
 
-		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 5.0f, 0.0f, (float)(i % 2) * -5.0f - 5.0f));
+		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 5.0f, 1.0f, (float)(i % 2) * -5.0f - 5.0f));
 
 		world.addEntity(dummy);
 		monkeys[i] = dummy;

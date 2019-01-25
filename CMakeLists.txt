@@ -23,7 +23,8 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/vertex.h
 							${GLASSWALL_DIR}/include/component.h
 							${GLASSWALL_DIR}/include/lighting.h
-							${GLASSWALL_DIR}/include/fpscounter.h)
+							${GLASSWALL_DIR}/include/fpscounter.h
+							${GLASSWALL_DIR}/include/entities/staticblock.h)
 
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
 include(GNUInstallDirs)
@@ -40,7 +41,8 @@ set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/colladaloader.cpp
 				${GLASSWALL_DIR}/src/component.cpp
 				${GLASSWALL_DIR}/src/lighting.cpp
-				${GLASSWALL_DIR}/src/fpscounter.cpp)
+				${GLASSWALL_DIR}/src/fpscounter.cpp
+				${GLASSWALL_DIR}/src/entities/staticblock.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
 

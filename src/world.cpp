@@ -42,13 +42,13 @@ namespace GW {
 			ent->onWorldStart();
 		}
 
+		m_worldStarted = true;
+
 		//trigger any entity start events
 		for (auto ent : m_entities) {
 			ent->entityStart();
 			initComponent(ent->rootComponent);
 		}
-
-		m_worldStarted = true;
 
 		while (!m_requestQuit) {
 			m_fpsCounter.startFrame();

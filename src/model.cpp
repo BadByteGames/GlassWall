@@ -48,6 +48,95 @@ void GW::RenderEngine::Model::loadFromFile(std::string fileName)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void GW::RenderEngine::Model::setBox(glm::vec3 dims)
+{
+	//list of normals
+	glm::vec3 top = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 bottom = glm::vec3(0.0f, -1.0f, 0.0f);
+	glm::vec3 left = glm::vec3(-1.0f, 0.0f, 0.0f);
+	glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 front = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 back = glm::vec3(0.0f, 0.0f, -1.0f);
+
+	//uv coordinates
+	glm::vec2 topLeft = glm::vec2(0.0f, 1.0f);
+	glm::vec2 bottomRight = glm::vec2(1.0f, 0.0f);
+	glm::vec2 topRight = glm::vec2(1.0f, 1.0f);
+	glm::vec2 bottomLeft = glm::vec2(0.0f, 0.0f);
+
+	//create the verticies
+	//front
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomLeft, front));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, 0.0f), GW::RenderEngine::WHITE, topRight, front));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, 0.0f), GW::RenderEngine::WHITE, topLeft, front));
+
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomLeft, front));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomRight, front));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, 0.0f), GW::RenderEngine::WHITE, topRight, front));
+
+	//back
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomRight, back));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, -dims.z), GW::RenderEngine::WHITE, topRight, back));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topLeft, back));
+	
+
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomRight, back));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topLeft, back));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomLeft, back));
+
+	//left
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomLeft, left));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, 0.0f), GW::RenderEngine::WHITE, topRight, left));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, -dims.z), GW::RenderEngine::WHITE, topLeft, left));
+	
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomLeft, left));
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomRight, left));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, 0.0f), GW::RenderEngine::WHITE, topRight, left));
+
+	//right
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomLeft, right));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topRight, right));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, 0.0f), GW::RenderEngine::WHITE, topLeft, right));
+
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, 0.0f), GW::RenderEngine::WHITE, bottomLeft, right));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomRight, right));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topRight, right));
+
+	//bottom
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomLeft, bottom));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, 0.0f), GW::RenderEngine::WHITE, topRight, bottom));
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, 0.0f), GW::RenderEngine::WHITE, topLeft, bottom));
+
+	m_vertices.push_back(Vertex(Position(0.0f, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomLeft, bottom));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, -dims.z), GW::RenderEngine::WHITE, bottomRight, bottom));
+	m_vertices.push_back(Vertex(Position(dims.x, 0.0f, 0.0f), GW::RenderEngine::WHITE, topRight, bottom));
+
+	//top
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, 0.0f), GW::RenderEngine::WHITE, bottomLeft, top));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topRight, top));
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, -dims.z), GW::RenderEngine::WHITE, topLeft, top));
+
+	m_vertices.push_back(Vertex(Position(0.0f, dims.y, 0.0f), GW::RenderEngine::WHITE, bottomLeft, top));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, 0.0f), GW::RenderEngine::WHITE, bottomRight, top));
+	m_vertices.push_back(Vertex(Position(dims.x, dims.y, -dims.z), GW::RenderEngine::WHITE, topRight, top));
+
+	//generate a vbo
+	if (m_vbo == 0) {
+		glGenBuffers(1, &m_vbo);
+	}
+
+	//set vbo to active buffer
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+
+	//set data
+	if (m_vertices.size() > 0) {
+		glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices[0], GL_STATIC_DRAW);
+	}
+
+	//unbind buffer
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void GW::RenderEngine::Model::useShader(const ShaderProgram & shader)
 {
 	//set shader to use to shader id
