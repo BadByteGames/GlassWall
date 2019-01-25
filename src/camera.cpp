@@ -16,7 +16,7 @@ GW::RenderEngine::Camera::Camera()
 
 	m_width = 1920;
 	m_height = 1080;
-	m_fov = (60.0f * PI) / 180.0f;
+	m_fov = glm::radians(60.0f);
 }
 
 GW::RenderEngine::Camera::~Camera()
@@ -99,10 +99,15 @@ glm::mat4 GW::RenderEngine::Camera::getProjectionMatrix()
 
 void GW::RenderEngine::Camera::setFOV(const float & fov)
 {
-	m_fov = fov;
+	m_fov = glm::radians(fov);
 }
 
 glm::vec3 GW::RenderEngine::Camera::getPosition()
 {
 	return m_position;
+}
+
+float GW::RenderEngine::Camera::getFov()
+{
+	return glm::degrees(m_fov);
 }

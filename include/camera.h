@@ -40,11 +40,12 @@ namespace GW{
 			glm::mat4 getViewMatrix();
 			glm::mat4 getProjectionMatrix();
 
-			//sets the field of viw
+			//sets the field of view in degrees
 			void setFOV(const float& fov);
 
 			//some getters
 			glm::vec3 getPosition();
+			float getFov();
 		private:
 			//stores camera position
 			glm::vec3 m_position;

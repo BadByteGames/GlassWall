@@ -134,6 +134,11 @@ class Player: public GW::Entity{
 		moveforward.axisInputs.emplace_back(SDLK_DOWN, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
 		inputManager->addAxis("moveforward", moveforward);
 
+		GW::Axis fovChange;
+		fovChange.axisInputs.emplace_back(SDLK_EQUALS, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
+		fovChange.axisInputs.emplace_back(SDLK_MINUS, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
+		inputManager->addAxis("fovchange", fovChange);
+
 		//create a static block in the world
 		m_wall = new GW::StaticBlock("block");
 		m_world->addEntity(m_wall);
@@ -174,6 +179,9 @@ class Player: public GW::Entity{
 		if (inputManager->isKeyDown(SDLK_ESCAPE)) {
 			m_world->requestQuit();
 		}
+
+		//change fov for some trippy affects
+		camera->setFOV(camera->getFov() + inputManager->getAxisValue("fovchange") * 0.5f);
 
 		if (inputManager->mousePressed(SDL_BUTTON_MIDDLE)) {
 			if (m_mouseLocked) {
