@@ -21,3 +21,5 @@ configure_file(resources/Floor.png ${CMAKE_BINARY_DIR}/examples/Floor.png COPYON
 configure_file(resources/MeshTexture.png ${CMAKE_BINARY_DIR}/examples/MeshTexture.png COPYONLY)
 configure_file(resources/MeshSpecular.png ${CMAKE_BINARY_DIR}/examples/MeshSpecular.png COPYONLY)
 configure_file(resources/test.dae ${CMAKE_BINARY_DIR}/examples/test.dae COPYONLY)
+configure_file(resources/level.json ${CMAKE_BINARY_DIR}/examples/level.json COPYONLY)
+configure_file(resources/config.json ${CMAKE_BINARY_DIR}/examples/config.json COPYONLY)

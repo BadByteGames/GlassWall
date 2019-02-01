@@ -5,7 +5,7 @@ project(GlassWall VERSION 1.0.0 LANGUAGES CXX)
 find_package(SDL2 REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm REQUIRED)
-find_package(tinyxml2 REQUIRED)
+find_package(tinyxml2 CONFIG REQUIRED)
 find_package(bullet REQUIRED)
 
 find_package(OpenGL REQUIRED)
@@ -24,6 +24,7 @@ set(GLASSWALL_PUBLICHEADERS ${GLASSWALL_DIR}/include/world.h
 							${GLASSWALL_DIR}/include/component.h
 							${GLASSWALL_DIR}/include/lighting.h
 							${GLASSWALL_DIR}/include/fpscounter.h
+							${GLASSWALL_DIR}/include/util.h
 							${GLASSWALL_DIR}/include/entities/staticblock.h)
 
 set(GLASSWALL_INCLUDE ${GLASSWALL_DIR}/include)
@@ -42,6 +43,7 @@ set(GLASSWALL_SRC ${GLASSWALL_DIR}/src/world.cpp
 				${GLASSWALL_DIR}/src/component.cpp
 				${GLASSWALL_DIR}/src/lighting.cpp
 				${GLASSWALL_DIR}/src/fpscounter.cpp
+				${GLASSWALL_DIR}/src/util.cpp
 				${GLASSWALL_DIR}/src/entities/staticblock.cpp)
 
 add_library(GlassWall ${GLASSWALL_PUBLICHEADERS} ${GLASSWALL_SRC})
@@ -67,7 +69,7 @@ PUBLIC
 	SDL2::SDL2main
 	${OPENGL_gl_LIBRARY}
 	${GLEW_LIBRARIES}
-	tinyxml2
+	tinyxml2::tinyxml2
 	${BULLET_LIBRARIES})
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)

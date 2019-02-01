@@ -23,7 +23,7 @@ namespace GW {
 		/*
 		*Starts the world after everything has been added
 		*/
-		void start();
+		void start(std::string configName);
 
 		/*
 		*Creates an entity object in the world
@@ -58,6 +58,9 @@ namespace GW {
 
 		//has the world started
 		bool getWorldStarted();
+
+		//will load the level from this file
+		void loadFromFile(const std::string& fileName);
 	private:
 		void update();
 

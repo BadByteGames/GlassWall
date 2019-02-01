@@ -229,7 +229,7 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < 10; i++){
 		Monkey* dummy = new Monkey("monkey");
 
-		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 5.0f, 1.0f, (float)(i % 2) * -5.0f - 5.0f));
+		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 4.0f, 1.0f, (float)(i % 2) * -5.0f - 5.0f));
 
 		world.addEntity(dummy);
 		monkeys[i] = dummy;
@@ -238,7 +238,7 @@ int main(int argc, char** argv) {
 	player = new Player("player");
 	world.addEntity(player);
 
-	world.start();
+	world.start("config.json");
 
 	for (int i = 0; i < 10; i++) {
 		delete monkeys[i];

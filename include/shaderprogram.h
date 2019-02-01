@@ -17,8 +17,6 @@ namespace GW {
 			void destroy();
 
 		private:
-			std::string getFileContents(std::string fileName);
-
 			int compileShader(std::string shaderFile, GLuint& shader, GLenum type);
 
 

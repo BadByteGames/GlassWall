@@ -10,7 +10,12 @@
 #include <textures.h>
 #include <component.h>
 #include <lighting.h>
+#include <json/json.hpp>
+#include <util.h>
+#include <entities/staticblock.h>
 
+
+using nlohmann::json;
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
@@ -23,13 +28,29 @@ namespace GW {
 	{
 	}
 
-	void World::start()
+	void World::start(std::string configName)
 	{
+		//load the config
+		std::string configData = Util::getFileContents(configName);
+
+		if (configData == "") {
+			std::cout << "Failed to load config" << std::endl;
+			return;
+		}
+
+		auto config = json::parse(configData);
+
+		std::string windowName = "Glass Wall";
+		if (config.find("window name") != config.end()) {
+			windowName = config["window name"].get<std::string>();
+		}
+		
+
 		//initialize rendering
 		RenderEngine::init();
 
 		//create a window
-		m_window->create("Glass Wall", 1280, 720, m_windowFlags);
+		m_window->create(windowName, 1280, 720, m_windowFlags);
 
 		//init glew
 		RenderEngine::initGL();
@@ -48,6 +69,10 @@ namespace GW {
 		for (auto ent : m_entities) {
 			ent->entityStart();
 			initComponent(ent->rootComponent);
+		}
+
+		if (config.find("start level") != config.end()) {
+			loadFromFile(config["start level"].get<std::string>());
 		}
 
 		while (!m_requestQuit) {
@@ -74,7 +99,7 @@ namespace GW {
 			m_fpsCounter.endFrame();
 
 			//set window title
-			m_window->setTitle("Glass Wall | "+std::to_string(m_fpsCounter.getFps())+" FPS");
+			m_window->setTitle(windowName + " | "+std::to_string(m_fpsCounter.getFps())+" FPS");
 		}
 
 		//call entity cleanup events
@@ -153,6 +178,134 @@ namespace GW {
 	bool World::getWorldStarted()
 	{
 		return m_worldStarted;
+	}
+
+	void World::loadFromFile(const std::string & fileName)
+	{
+		std::string levelFile = Util::getFileContents(fileName);
+		if (levelFile == "") {
+			std::cout << "Failed to open: "<<fileName << std::endl;
+		}
+		auto levelJson = json::parse(levelFile);
+
+		std::unordered_map < std::string, RenderEngine::Material > materials;
+		//generate materials
+		if (levelJson.find("materials") != levelJson.end()) {
+			for (auto it : levelJson["materials"].items()) {
+				RenderEngine::Material tempMaterial(0, 0);
+
+				if (it.value().find("texture") != it.value().end()) {
+					tempMaterial.diffuseID = RenderEngine::Textures::getTexture(it.value()["texture"].get<std::string>());
+				}
+
+				if (it.value().find("specular") != it.value().end()) {
+					tempMaterial.specularID = RenderEngine::Textures::getTexture(it.value()["specular"].get<std::string>());
+
+				}
+
+				materials.insert(std::make_pair(it.key(), tempMaterial));
+			}
+		}
+
+		std::unordered_map < std::string, GW::RenderEngine::ShaderProgram> programs;
+		//load shaders
+		if (levelJson.find("shaders") != levelJson.end()) {
+			for (auto it : levelJson["shaders"].items()) {
+				GW::RenderEngine::ShaderProgram tempProgram;
+
+				std::string vertex = "";
+				if (it.value().find("vertex") != it.value().end()) {
+					vertex = it.value()["vertex"].get<std::string>();
+				}
+
+				std::string fragment = "";
+				if (it.value().find("fragment") != it.value().end()) {
+					fragment = it.value()["fragment"].get<std::string>();
+				}
+
+				tempProgram.compileShadersFromFile(vertex, fragment);
+				programs.insert(std::make_pair(it.key(), tempProgram));
+			}
+		}
+		
+		//generate static blocks
+		if (levelJson.find("blocks") != levelJson.end()) {
+			for (auto it : levelJson["blocks"].items()) {
+				GW::StaticBlock* block = new GW::StaticBlock("block");
+				this->addEntity(block);
+
+				//load dimensions
+				if (it.value().find("dims") != it.value().end()) {
+					auto dims = it.value()["dims"];
+					glm::vec3 dimValues(0.0f);
+
+					if (dims.find("x") != dims.end()) {
+						dimValues.x = dims["x"].get<float>();
+					}
+
+					if (dims.find("y") != dims.end()) {
+						dimValues.y = dims["y"].get<float>();
+					}
+
+					if (dims.find("z") != dims.end()) {
+						dimValues.z = dims["z"].get<float>();
+					}
+
+					block->setDimensions(dimValues);
+				}
+
+				//load position
+				if (it.value().find("pos") != it.value().end()) {
+					auto pos = it.value()["pos"];
+					glm::vec3 posValues(0.0f);
+
+					if (pos.find("x") != pos.end()) {
+						posValues.x = pos["x"].get<float>();
+					}
+
+					if (pos.find("y") != pos.end()) {
+						posValues.y = pos["y"].get<float>();
+					}
+
+					if (pos.find("z") != pos.end()) {
+						posValues.z = pos["z"].get<float>();
+					}
+
+					block->setPosition(posValues);
+				}
+
+				//load orientation
+				if (it.value().find("orientation") != it.value().end()) {
+					auto orientation = it.value()["orientation"];
+					glm::vec3 orientationValues(0.0f);
+
+					if (orientation.find("x") != orientation.end()) {
+						orientationValues.x = orientation["x"].get<float>();
+					}
+
+					if (orientation.find("y") != orientation.end()) {
+						orientationValues.y = orientation["y"].get<float>();
+					}
+
+					if (orientation.find("z") != orientation.end()) {
+						orientationValues.z = orientation["z"].get<float>();
+					}
+
+					block->setOrientation(orientationValues);
+				}
+
+				//load the shader
+				if (it.value().find("shader") != it.value().end()) {
+					block->setShader(programs.find(it.value()["shader"])->second);
+				}
+				
+				//load the material
+				if (it.value().find("material") != it.value().end()) {
+					block->useMaterial(materials.find(it.value()["material"])->second);
+				}
+			}
+		}
+
 	}
 
 	void World::update()

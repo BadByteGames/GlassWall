@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <GL/glew.h>
+#include <util.h>
 
 //default shader source to use including enough to render textures
 //no advanced effects
@@ -69,30 +70,12 @@ namespace GW {
 			glDeleteProgram(m_program);
 		}
 
-		std::string ShaderProgram::getFileContents(std::string fileName)
-		{
-			std::string str = "";
-			std::ifstream t;
-			t.open(fileName, std::ios::in | std::ios::binary);
-
-			if (t.is_open()) {
-				t.seekg(0, std::ios::end);
-				str.reserve(t.tellg());
-				t.seekg(0, std::ios::beg);
-
-				str.assign((std::istreambuf_iterator<char>(t)),
-					std::istreambuf_iterator<char>());
-			}
-
-			return str;
-		}
-
 		int ShaderProgram::compileShader(std::string shaderFile, GLuint& shader, GLenum type)
 		{
 			//create shader
 			shader = glCreateShader(type);
 
-			std::string source = getFileContents(shaderFile);
+			std::string source = Util::getFileContents(shaderFile);
 			const char* tempCstr = source.c_str();
 			GLint length = static_cast<GLint>(source.size());
 			glShaderSource(shader, 1, &tempCstr, &length);
