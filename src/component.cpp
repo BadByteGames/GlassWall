@@ -13,8 +13,7 @@ GW::Component::Component()
 	m_world = nullptr;
 	m_type = "component";
 	m_absolutePosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_absoluteOrientation = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_relativeOrientation = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_orientation = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_relativePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -49,14 +48,9 @@ void GW::Component::setRelativePosition(glm::vec3 position)
 	m_relativePosition = position;
 }
 
-void GW::Component::setAbsoluteOrientation(glm::vec3 angles)
+void GW::Component::setOrientation(glm::vec3 angles)
 {
-	m_absoluteOrientation = glm::vec3((angles.x * PI) / 180.0f, (angles.y * PI) / 180.0f, (angles.z * PI) / 180.0f);
-}
-
-void GW::Component::setRelativeOrientation(glm::vec3 angles)
-{
-	m_relativeOrientation = glm::vec3((angles.x * PI) / 180.0f, (angles.y * PI) / 180.0f, (angles.z * PI) / 180.0f);
+	m_orientation = glm::vec3((angles.x * PI) / 180.0f, (angles.y * PI) / 180.0f, (angles.z * PI) / 180.0f);
 }
 
 glm::mat4 GW::Component::getTransform()
@@ -66,9 +60,9 @@ glm::mat4 GW::Component::getTransform()
 		glm::mat4 transformation = glm::mat4(1.0f);
 		transformation = glm::translate(transformation, m_absolutePosition);
 		
-		transformation = glm::rotate(transformation, m_absoluteOrientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		transformation = glm::rotate(transformation, m_absoluteOrientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		transformation = glm::rotate(transformation, m_absoluteOrientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		transformation = glm::rotate(transformation, m_orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		transformation = glm::rotate(transformation, m_orientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		transformation = glm::rotate(transformation, m_orientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 		return transformation;
 	}
 	//return transform of parent modified
@@ -79,9 +73,9 @@ glm::mat4 GW::Component::getTransform()
 
 	if(getAbsolutePosition() != glm::vec3(0.0f))
 		transformation = glm::translate(transformation, m_relativePosition);
-	transformation = glm::rotate(transformation, m_relativeOrientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	transformation = glm::rotate(transformation, m_relativeOrientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	transformation = glm::rotate(transformation, m_relativeOrientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	transformation = glm::rotate(transformation, m_orientation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	transformation = glm::rotate(transformation, m_orientation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	transformation = glm::rotate(transformation, m_orientation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	return transformation;
 }
@@ -102,9 +96,9 @@ glm::vec3 GW::Component::getAbsolutePosition()
 		return m_absolutePosition;
 	}
 	else {
-		glm::vec4 absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_relativeOrientation.x * PI) / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::vec4(m_relativePosition, 1.0f);
-		absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_relativeOrientation.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * absoluteTranslation;
-		absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_relativeOrientation.z * PI) / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * absoluteTranslation;
+		glm::vec4 absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_orientation.x * PI) / 180.0f, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::vec4(m_relativePosition, 1.0f);
+		absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_orientation.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * absoluteTranslation;
+		absoluteTranslation = glm::rotate(glm::mat4(1.0f), (m_orientation.z * PI) / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f)) * absoluteTranslation;
 		if (m_parent != nullptr) {
 			return m_parent->getAbsolutePosition() + glm::vec3(absoluteTranslation);
 		}

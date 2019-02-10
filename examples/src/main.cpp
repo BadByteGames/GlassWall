@@ -51,7 +51,7 @@ public:
 
 		GW::InputManager* inputManager = m_world->getInputManager();
 		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
-		m_model->setRelativeOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
+		m_model->setOrientation(glm::vec3(0.0f, m_rotationY, 0.0f));
 
 		m_rotationY += inputManager->getAxisValue("rotatemonkey") * 15.0f;
 	}

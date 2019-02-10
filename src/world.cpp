@@ -3,13 +3,11 @@
 #include <iostream>
 #include <entity.h>
 #include <renderengine.h>
-#include <window.h>
 #include <SDL.h>
 #include <model.h>
-#include <camera.h>
 #include <textures.h>
 #include <component.h>
-#include <lighting.h>
+#include <window.h>
 #include <json/json.hpp>
 #include <util.h>
 #include <entities/staticblock.h>
@@ -19,9 +17,11 @@ using nlohmann::json;
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
-		m_camera = new RenderEngine::Camera();
-		m_lighting = new RenderEngine::Lighting();
-		m_window = new RenderEngine::Window();
+		m_camera = std::make_unique<RenderEngine::Camera>();
+		m_lighting = std::make_unique<RenderEngine::Lighting>();
+		m_window = std::make_unique<RenderEngine::Window>();
+		m_inputManager = std::make_unique<InputManager>();
+		m_fpsCounter = std::make_unique<FpsCounter>();
 	}
 
 	World::~World()
@@ -56,7 +56,7 @@ namespace GW {
 		RenderEngine::initGL();
 
 		m_camera->setDimensions(1280, 720);
-		m_inputManager.setWindowDimensions(1280, 720);
+		m_inputManager->setWindowDimensions(1280, 720);
 
 		//trigger all the entity world start events
 		for (auto ent : m_entities) {
@@ -76,18 +76,18 @@ namespace GW {
 		}
 
 		while (!m_requestQuit) {
-			m_fpsCounter.startFrame();
+			m_fpsCounter->startFrame();
 			//clear the window to black
 			m_window->clear(0.0f, 0.0f, 0.0f);
 
 			//update input
-			m_inputManager.update();
+			m_inputManager->update();
 
 			//update the world until stopped
 			update();
 
 			//quit if necessary
-			if (m_inputManager.quitRequested()) {
+			if (m_inputManager->quitRequested()) {
 				m_requestQuit = true;
 			}
 						
@@ -96,10 +96,10 @@ namespace GW {
 
 			//swap buffers
 			m_window->swapBuffers();
-			m_fpsCounter.endFrame();
+			m_fpsCounter->endFrame();
 
 			//set window title
-			m_window->setTitle(windowName + " | "+std::to_string(m_fpsCounter.getFps())+" FPS");
+			m_window->setTitle(windowName + " | "+std::to_string(m_fpsCounter->getFps())+" FPS");
 		}
 
 		//call entity cleanup events
@@ -109,9 +109,6 @@ namespace GW {
 
 		//cleanup renderengine
 		m_window->destroy();
-		delete m_window;
-		delete m_camera;
-		delete m_lighting;
 		
 		RenderEngine::Textures::clearCache();
 
@@ -157,22 +154,22 @@ namespace GW {
 
 	RenderEngine::Camera * World::getCamera()
 	{
-		return m_camera;
+		return m_camera.get();
 	}
 
 	InputManager * World::getInputManager()
 	{
-		return &m_inputManager;
+		return m_inputManager.get();
 	}
 
 	RenderEngine::Lighting * World::getLighting()
 	{
-		return m_lighting;
+		return m_lighting.get();
 	}
 
 	FpsCounter * World::getFpsCounter()
 	{
-		return &m_fpsCounter;
+		return m_fpsCounter.get();
 	}
 
 	bool World::getWorldStarted()

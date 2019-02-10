@@ -23,7 +23,7 @@ void GW::StaticBlock::setPosition(glm::vec3 pos)
 
 void GW::StaticBlock::setOrientation(glm::vec3 angles)
 {
-	m_model->setAbsoluteOrientation(angles);
+	m_model->setOrientation(angles);
 }
 
 void GW::StaticBlock::setDimensions(glm::vec3 dims)

@@ -24,10 +24,7 @@ namespace GW {
 		void setRelativePosition(glm::vec3 position);
 
 		//angles in degrees
-		void setAbsoluteOrientation(glm::vec3 angles);
-
-		//angles in degrees
-		void setRelativeOrientation(glm::vec3 angles);
+		void setOrientation(glm::vec3 angles);
 
 		//get a transform matrix
 		glm::mat4 getTransform();
@@ -49,11 +46,8 @@ namespace GW {
 		//stores position relative to parent
 		glm::vec3 m_relativePosition;
 
-		//stores absolute angle measures
-		glm::vec3 m_absoluteOrientation;
-
-		//stores relative orientation
-		glm::vec3 m_relativeOrientation;
+		//stores angle measures
+		glm::vec3 m_orientation;
 			
 		//the parent of this component
 		Component* m_parent;

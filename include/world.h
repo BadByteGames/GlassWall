@@ -4,16 +4,17 @@
 #include <settings.h>
 #include <inputmanager.h>
 #include <fpscounter.h>
+#include <lighting.h>
+#include <camera.h>
+#include <memory>
 
 namespace GW {
-	namespace RenderEngine{
-		class Window;
-		class Camera;
-		class Lighting;
-	}
-
 	class Entity;
 	class Component;
+
+	namespace RenderEngine {
+		class Window;
+	}
 
 	class World {
 	public:
@@ -80,18 +81,18 @@ namespace GW {
 		bool m_worldStarted;
 
 		//window of game
-		RenderEngine::Window* m_window;
+		std::unique_ptr<RenderEngine::Window> m_window;
 
 		//currently active camera
-		RenderEngine::Camera* m_camera;
+		std::unique_ptr<RenderEngine::Camera> m_camera;
 
 		//stores all lighting
-		RenderEngine::Lighting* m_lighting;
+		std::unique_ptr<RenderEngine::Lighting> m_lighting;
 
 		//stores key values
-		InputManager m_inputManager;
+		std::unique_ptr<InputManager> m_inputManager;
 
 		//calculate FPS
-		FpsCounter m_fpsCounter;
+		std::unique_ptr<FpsCounter> m_fpsCounter;
 	};
 }
