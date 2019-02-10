@@ -59,16 +59,16 @@ namespace GW {
 		m_inputManager->setWindowDimensions(1280, 720);
 
 		//trigger all the entity world start events
-		for (auto ent : m_entities) {
-			ent->onWorldStart();
+		for (int i = 0; i < m_entities.size(); i++) {
+			m_entities[i]->onWorldStart();
 		}
 
 		m_worldStarted = true;
 
 		//trigger any entity start events
-		for (auto ent : m_entities) {
-			ent->entityStart();
-			initComponent(ent->rootComponent);
+		for (int i = 0; i < m_entities.size(); i++) {
+			m_entities[i]->entityStart();
+			initComponent(m_entities[i]->rootComponent.get());
 		}
 
 		if (config.find("start level") != config.end()) {
@@ -103,8 +103,8 @@ namespace GW {
 		}
 
 		//call entity cleanup events
-		for (auto ent : m_entities) {
-			ent->cleanUp();
+		for (int i = 0; i < m_entities.size(); i++) {
+			m_entities[i]->cleanUp();
 		}
 
 		//cleanup renderengine
@@ -115,15 +115,16 @@ namespace GW {
 		//don't delete entities managed by user
 	}
 
-	void World::addEntity(Entity * entity)
+	void World::addEntity(std::unique_ptr<Entity> entity)
 	{
 		entity->m_world = this;
-		m_entities.push_back(entity);
+		GW::Entity* tempRef = entity.get();
+		m_entities.push_back(std::move(entity));
 
 		//init entity if world already started
 		if (m_worldStarted) {
-			entity->entityStart();
-			initComponent(entity->rootComponent);
+			tempRef->entityStart();
+			initComponent(tempRef->rootComponent.get());
 		}
 	}
 
@@ -228,9 +229,9 @@ namespace GW {
 		//generate static blocks
 		if (levelJson.find("blocks") != levelJson.end()) {
 			for (auto it : levelJson["blocks"].items()) {
-				GW::StaticBlock* block = new GW::StaticBlock("block");
-				this->addEntity(block);
-
+				std::unique_ptr<GW::StaticBlock> blockUnique = std::make_unique<GW::StaticBlock>();
+				GW::StaticBlock* block = blockUnique.get();
+				this->addEntity(std::move(blockUnique));
 				//load dimensions
 				if (it.value().find("dims") != it.value().end()) {
 					auto dims = it.value()["dims"];
@@ -308,15 +309,15 @@ namespace GW {
 	void World::update()
 	{
 		//call all entity update functions
-		for (auto ent : m_entities) {
-			ent->update();
-			updateComponent(ent->rootComponent);
+		for (int i = 0; i < m_entities.size(); i++) {
+			m_entities[i]->update();
+			updateComponent(m_entities[i]->rootComponent.get());
 		}
 	}
 	void World::draw()
 	{
-		for (auto it : m_entities) {
-			drawComponent(it->rootComponent);
+		for (int i = 0; i < m_entities.size(); i++) {
+			drawComponent(m_entities[i]->rootComponent.get());
 		}
 	}
 

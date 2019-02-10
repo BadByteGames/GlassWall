@@ -25,15 +25,15 @@ public:
 	using GW::Entity::Entity;
 
 	virtual void entityStart() {
-		rootComponent = new GW::Component();
+		rootComponent = std::make_unique<GW::Component>();
 
 		//compile shaders on entity start
 		m_shader.compileShadersFromFile("debug.vert", "debug.frag");
 
 		//init the model
-		m_model = new GW::RenderEngine::Model();;
+		m_model = std::make_unique<GW::RenderEngine::Model>();
 
-		rootComponent->addChild(m_model);
+		rootComponent->addChild(m_model.get());
 		rootComponent->setAbsolutePosition(m_startPos);
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -61,9 +61,6 @@ public:
 		m_shader.destroy();
 
 		m_model->cleanUp();
-		
-		delete m_model;
-		delete rootComponent;
 	}
 	
 	void setPos(glm::vec3 pos) {
@@ -77,7 +74,7 @@ public:
 	}
 
 private:
-	GW::RenderEngine::Model* m_model;
+	std::unique_ptr<GW::RenderEngine::Model> m_model;
 
 	float m_rotationY = 0.0f;
 	
@@ -139,14 +136,6 @@ class Player: public GW::Entity{
 		fovChange.axisInputs.emplace_back(SDLK_MINUS, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
 		inputManager->addAxis("fovchange", fovChange);
 
-		//create a static block in the world
-		m_wall = new GW::StaticBlock("block");
-		m_world->addEntity(m_wall);
-		m_wall->setDimensions(glm::vec3(0.5f));
-		m_wall->setPosition(glm::vec3(-1.0f, 0.0f, 0.0f));
-		m_wall->setOrientation(glm::vec3(0.0f, 0.0f, 0.0f));
-		m_wall->setShader(m_shader);
-		m_wall->useMaterial(GW::RenderEngine::Material(GW::RenderEngine::Textures::getTexture("Floor.png"), 0));
 		m_world->getCamera()->setAbsolutePosition(glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
@@ -222,29 +211,18 @@ int main(int argc, char** argv) {
 	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 9.5f, 25.5f, 1.0f, 0.14f, 0.07f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, -0.2f}, 0.5f, 0.1f));
 
-	Monkey* monkeys[10];
-
-	Player* player;
 
 	for(int i = 0; i < 10; i++){
-		Monkey* dummy = new Monkey("monkey");
+		std::unique_ptr<Monkey> dummy = std::make_unique<Monkey>();
 
 		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 4.0f, 1.0f, (float)(i % 2) * -5.0f - 5.0f));
 
-		world.addEntity(dummy);
-		monkeys[i] = dummy;
+		world.addEntity(std::move(dummy));
 	}
 
-	player = new Player("player");
-	world.addEntity(player);
+	world.addEntity(std::make_unique<Player>());
 
 	world.start("config.json");
 
-	for (int i = 0; i < 10; i++) {
-		delete monkeys[i];
-	}
-
-	delete player;
-	
 	return 0;
 }

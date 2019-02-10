@@ -25,6 +25,6 @@ namespace GW {
 		void useMaterial(const GW::RenderEngine::Material& material);
 
 	private:
-		GW::RenderEngine::Model* m_model;
+		std::unique_ptr<GW::RenderEngine::Model> m_model;
 	};
 }

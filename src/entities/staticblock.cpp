@@ -1,19 +1,17 @@
 #include <entities\staticblock.h>
 #include <model.h>
 #include <iostream>
-
+#include <memory>
 void GW::StaticBlock::entityStart()
 {
-	rootComponent = new GW::Component();
-	m_model = new GW::RenderEngine::Model();
+	rootComponent = std::make_unique<GW::Component>();
+	m_model = std::make_unique<GW::RenderEngine::Model>();
 
-	rootComponent->addChild(m_model);
+	rootComponent->addChild(m_model.get());
 }
 
 void GW::StaticBlock::cleanUp()
 {
-	delete m_model;
-	delete rootComponent;
 }
 
 void GW::StaticBlock::setPosition(glm::vec3 pos)

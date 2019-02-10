@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace GW {
 	namespace RenderEngine {
@@ -10,7 +11,7 @@ namespace GW {
 	class Component;
 	class Entity {
 	public:
-		Entity(std::string);
+		Entity();
 		~Entity();
 
 		virtual void entityStart();
@@ -28,9 +29,6 @@ namespace GW {
 		//refrence to parent world
 		World* m_world;
 
-		Component* rootComponent;
-
-		//name of entity
-		std::string m_name;
+		std::unique_ptr<Component> rootComponent;
 	};
 }

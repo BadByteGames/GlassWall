@@ -29,7 +29,7 @@ namespace GW {
 		/*
 		*Creates an entity object in the world
 		*/
-		void addEntity(Entity* entity);
+		void addEntity(std::unique_ptr<Entity> entity);
 
 		/*
 		*Ask the world to stop
@@ -73,7 +73,7 @@ namespace GW {
 
 		void drawComponent(Component* component);
 
-		std::vector<Entity*> m_entities;
+		std::vector<std::unique_ptr<Entity>> m_entities;
 
 		unsigned int m_windowFlags;
 

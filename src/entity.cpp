@@ -2,9 +2,8 @@
 #include <model.h>
 
 namespace GW {
-	Entity::Entity(std::string name)
+	Entity::Entity()
 	{
-		m_name = name;
 		m_world = nullptr;
 		rootComponent = nullptr;
 	}
