@@ -105,7 +105,8 @@
 			},
 			"material":"floor",
 			"shader":"main"
-		},{
+		},
+		{
 			"dims": {
 				"x":10.0,
 				"y":10.0,
@@ -123,6 +124,17 @@
 			},
 			"material":"floor",
 			"shader":"main"
+		}
+	],
+	"entities":[
+		{
+			"type":"Monkey",
+			"name":"monkey_head",
+			"position":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			}
 		}
 	]
 }

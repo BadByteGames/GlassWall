@@ -8,7 +8,7 @@
 #include <textures.h>
 #include <component.h>
 #include <window.h>
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 #include <util.h>
 #include <entities/staticblock.h>
 

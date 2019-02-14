@@ -7,6 +7,7 @@ find_package(glew REQUIRED)
 find_package(glm REQUIRED)
 find_package(tinyxml2 CONFIG REQUIRED)
 find_package(bullet REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 find_package(OpenGL REQUIRED)
 
@@ -70,7 +71,9 @@ PUBLIC
 	${OPENGL_gl_LIBRARY}
 	${GLEW_LIBRARIES}
 	tinyxml2::tinyxml2
-	${BULLET_LIBRARIES})
+	${BULLET_LIBRARIES}
+	nlohmann_json
+	nlohmann_json::nlohmann_json)
 
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/GlassWall)
 
