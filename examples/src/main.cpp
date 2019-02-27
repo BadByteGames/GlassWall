@@ -22,11 +22,11 @@ const float PI = 3.14159265359f;
 
 class Monkey : public GW::Entity {
 public:
-	using GW::Entity::Entity;
+	Monkey() : GW::Entity() {
+
+	}
 
 	virtual void entityStart() {
-		rootComponent = std::make_unique<GW::Component>();
-
 		//compile shaders on entity start
 		m_shader.compileShadersFromFile("debug.vert", "debug.frag");
 
@@ -34,7 +34,6 @@ public:
 		m_model = std::make_unique<GW::RenderEngine::Model>();
 
 		rootComponent->addChild(m_model.get());
-		rootComponent->setAbsolutePosition(m_startPos);
 		m_model->setRelativePosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		//load model
@@ -68,9 +67,6 @@ public:
 			//set pos
 			rootComponent->setAbsolutePosition(pos);
 		}
-		else {
-			m_startPos = pos;
-		}
 	}
 
 private:
@@ -84,7 +80,10 @@ private:
 };
 
 class Player: public GW::Entity{
-	using GW::Entity::Entity;
+public:
+	Player () : 
+	GW::Entity()
+	{}
 
 	virtual void entityStart() {
 
@@ -204,21 +203,10 @@ private:
 int main(int argc, char** argv) {
 	GW::World world;
 
-	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 1.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.14f, 0.07f));
-	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 1.0f, 0.0f, 0.0f}, { -3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
-	//world.getLighting()->addPointLight(GW::RenderEngine::PointLight({ 0.0f, 0.0f, 1.0f }, { 3.0f, 0.0f, -7.0f }, 0.5f, 0.1f, 1.0f, 0.07f, 0.017f));
-	
 	world.getLighting()->addSpotLight(GW::RenderEngine::SpotLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, 0.5f, 0.1f, 9.5f, 25.5f, 1.0f, 0.14f, 0.07f));
 	world.getLighting()->setDirectionalLight(GW::RenderEngine::DirectionalLight({ 1.0f, 1.0f, 1.0f }, {-0.2f, -1.0f, -0.2f}, 0.5f, 0.1f));
 
-
-	for(int i = 0; i < 10; i++){
-		std::unique_ptr<Monkey> dummy = std::make_unique<Monkey>();
-
-		dummy->setPos(glm::vec3((float)(i % 5) * 2.0f - 4.0f, 1.0f, (float)(i % 2) * -5.0f - 5.0f));
-
-		world.addEntity(std::move(dummy));
-	}
+	world.addEntitySpawner("Monkey", []() {return std::move(std::make_unique<Monkey>()); });
 
 	world.addEntity(std::make_unique<Player>());
 

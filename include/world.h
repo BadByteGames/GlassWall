@@ -7,6 +7,7 @@
 #include <lighting.h>
 #include <camera.h>
 #include <memory>
+#include <functional>
 
 namespace GW {
 	class Entity;
@@ -27,7 +28,17 @@ namespace GW {
 		void start(std::string configName);
 
 		/*
-		*Creates an entity object in the world
+		*Adds a lambda that spawns an entity of that name
+		*/
+		void addEntitySpawner(std::string name, std::function<std::unique_ptr<Entity>()> entitySpawner);
+
+		/*
+		*Creates a new entity using a lambda
+		*/
+		std::unique_ptr<Entity> generateEntity(std::string name);
+
+		/*
+		*adds an entity into the world
 		*/
 		void addEntity(std::unique_ptr<Entity> entity);
 
@@ -74,6 +85,9 @@ namespace GW {
 		void drawComponent(Component* component);
 
 		std::vector<std::unique_ptr<Entity>> m_entities;
+
+		//a map of entity spawners used to create entities
+		std::unordered_map<std::string, std::function<std::unique_ptr<Entity>()>> m_spawners;
 
 		unsigned int m_windowFlags;
 

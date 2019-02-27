@@ -1,11 +1,13 @@
 #include <entity.h>
 #include <model.h>
+#include <memory>
+#include <component.h>
 
 namespace GW {
 	Entity::Entity()
 	{
 		m_world = nullptr;
-		rootComponent = nullptr;
+		rootComponent = std::make_unique<GW::Component>();
 	}
 
 	Entity::~Entity()

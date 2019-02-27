@@ -2,9 +2,14 @@
 #include <model.h>
 #include <iostream>
 #include <memory>
+
+GW::StaticBlock::StaticBlock()
+	: GW::Entity()
+{
+}
+
 void GW::StaticBlock::entityStart()
 {
-	rootComponent = std::make_unique<GW::Component>();
 	m_model = std::make_unique<GW::RenderEngine::Model>();
 
 	rootComponent->addChild(m_model.get());

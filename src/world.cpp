@@ -44,7 +44,7 @@ namespace GW {
 		if (config.find("window name") != config.end()) {
 			windowName = config["window name"].get<std::string>();
 		}
-		
+
 
 		//initialize rendering
 		RenderEngine::init();
@@ -90,7 +90,7 @@ namespace GW {
 			if (m_inputManager->quitRequested()) {
 				m_requestQuit = true;
 			}
-						
+
 			//draw entity models
 			draw();
 
@@ -99,7 +99,7 @@ namespace GW {
 			m_fpsCounter->endFrame();
 
 			//set window title
-			m_window->setTitle(windowName + " | "+std::to_string(m_fpsCounter->getFps())+" FPS");
+			m_window->setTitle(windowName + " | " + std::to_string(m_fpsCounter->getFps()) + " FPS");
 		}
 
 		//call entity cleanup events
@@ -113,6 +113,22 @@ namespace GW {
 		RenderEngine::Textures::clearCache();
 
 		//don't delete entities managed by user
+	}
+
+	void World::addEntitySpawner(std::string name, std::function<std::unique_ptr<Entity>()> entitySpawner)
+	{
+		m_spawners.insert(std::make_pair(name, entitySpawner));
+	}
+
+	std::unique_ptr<Entity> World::generateEntity(std::string name)
+	{
+		//check if spawner defined first
+		if (m_spawners.find(name) != m_spawners.end()) {
+			return std::move(m_spawners.find(name)->second());
+		}
+		else {
+			return nullptr;
+		}
 	}
 
 	void World::addEntity(std::unique_ptr<Entity> entity)
@@ -253,8 +269,8 @@ namespace GW {
 				}
 
 				//load position
-				if (it.value().find("pos") != it.value().end()) {
-					auto pos = it.value()["pos"];
+				if (it.value().find("position") != it.value().end()) {
+					auto pos = it.value()["position"];
 					glm::vec3 posValues(0.0f);
 
 					if (pos.find("x") != pos.end()) {
@@ -304,6 +320,34 @@ namespace GW {
 			}
 		}
 
+		//generate entities
+		if (levelJson.find("entities") != levelJson.end()) {
+			for (auto it : levelJson["entities"].items()) {
+
+				std::unique_ptr<GW::Entity> entUnique = generateEntity(it.value()["type"].get<std::string>());
+				GW::Entity* tempRefrence = entUnique.get();
+				this->addEntity(std::move(entUnique));
+				//load position
+				if (it.value().find("position") != it.value().end()) {
+					auto pos = it.value()["position"];
+					glm::vec3 posValues(0.0f);
+
+					if (pos.find("x") != pos.end()) {
+						posValues.x = pos["x"].get<float>();
+					}
+
+					if (pos.find("y") != pos.end()) {
+						posValues.y = pos["y"].get<float>();
+					}
+
+					if (pos.find("z") != pos.end()) {
+						posValues.z = pos["z"].get<float>();
+					}
+
+					tempRefrence->rootComponent->setAbsolutePosition(posValues);
+				}
+			}
+		}
 	}
 
 	void World::update()

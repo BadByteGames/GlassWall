@@ -8,7 +8,7 @@
 namespace GW {
 	class StaticBlock : public GW::Entity {
 	public:
-		using GW::Entity::Entity;
+		StaticBlock();
 
 		virtual void entityStart();
 
