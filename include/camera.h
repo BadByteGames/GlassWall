@@ -1,22 +1,14 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <component.h>
 
 namespace GW{
 	namespace RenderEngine{
-		class Camera {
+		class Camera : public Component{
 		public:
 			Camera();
 			~Camera();
-			
-			//sets absolute position in world
-			void setAbsolutePosition(const glm::vec3& position);
-			
-			//set rotation values (in degrees)
-			void setRotation(const glm::vec3& rotations);
-
-			//set rotation values (in degrees)
-			void setRotation(float x, float y, float z);
 
 			//sets target
 			void setTarget(const glm::vec3& target);
@@ -44,17 +36,12 @@ namespace GW{
 			void setFOV(const float& fov);
 
 			//some getters
-			glm::vec3 getPosition();
 			float getFov();
 		private:
-			//stores camera position
-			glm::vec3 m_position;
 			//stores the location for the camera to look at
 			glm::vec3 m_target;
 			//stores the "up" direction of the camera
 			glm::vec3 m_up;
-			//stores x, y, and z rotations stored in radians
-			glm::vec3 m_rotations;
 
 			//is camera orthographic
 			bool m_orthographic;

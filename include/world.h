@@ -73,6 +73,9 @@ namespace GW {
 
 		//will load the level from this file
 		void loadFromFile(const std::string& fileName);
+
+		//uses the specified camera
+		void useCamera(RenderEngine::Camera* camera);
 	private:
 		void update();
 
@@ -97,8 +100,8 @@ namespace GW {
 		//window of game
 		std::unique_ptr<RenderEngine::Window> m_window;
 
-		//currently active camera
-		std::unique_ptr<RenderEngine::Camera> m_camera;
+		//refrence to currently active camera
+		RenderEngine::Camera* m_camera;
 
 		//stores all lighting
 		std::unique_ptr<RenderEngine::Lighting> m_lighting;

@@ -83,7 +83,11 @@ class Player: public GW::Entity{
 public:
 	Player () : 
 	GW::Entity()
-	{}
+	{
+		m_camera = std::make_unique<GW::RenderEngine::Camera>();
+		rootComponent->addChild(m_camera.get());
+		m_camera->setRelativePosition(glm::vec3(0.0f, 1.0f, 0.0f));
+	}
 
 	virtual void entityStart() {
 
@@ -93,7 +97,8 @@ public:
 		//capture mouse in window
 		m_world->getInputManager()->setMouseTrapped(true);
 
-		m_world->getCamera()->setOrthopgraphic(false);
+		m_world->useCamera(m_camera.get());
+		m_camera->setOrthopgraphic(false);
 
 		angles = glm::vec3(0.0f);
 
@@ -134,8 +139,6 @@ public:
 		fovChange.axisInputs.emplace_back(SDLK_EQUALS, GW::AXISTYPE::SDLKEYBOARD, 1.0f);
 		fovChange.axisInputs.emplace_back(SDLK_MINUS, GW::AXISTYPE::SDLKEYBOARD, -1.0f);
 		inputManager->addAxis("fovchange", fovChange);
-
-		m_world->getCamera()->setAbsolutePosition(glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	virtual void update() {
@@ -145,8 +148,7 @@ public:
 		GW::FpsCounter* fpsCounter = m_world->getFpsCounter();
 
 		glm::vec3 translation = glm::rotate(glm::mat4(1.0f), (angles.y * PI) / 180.0f, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::normalize(glm::vec4(inputManager->getAxisValue("moveright") * MOVE_SPEED * fpsCounter->getDeltaTime(), 0.0f, inputManager->getAxisValue("moveforward") * MOVE_SPEED * fpsCounter->getDeltaTime(), 1.0f));
-		glm::vec3 newPos = camera->getPosition() + translation;
-		camera->setAbsolutePosition(newPos);
+		rootComponent->setAbsolutePosition(rootComponent->getAbsolutePosition() + translation);
 		
 		//change camera angles based off mouse motion if mouse locked
 		if (m_mouseLocked) {
@@ -154,12 +156,13 @@ public:
 			angles.x += inputManager->getAxisValue("lookvertical") * SENSITIVITY;
 
 			angles.x = glm::clamp(angles.x, -89.999f, 89.999f);
-
-			camera->setRotation(angles);
+			
+			rootComponent->setOrientation(glm::vec3(0.0f, angles.y, 0.0f));
+			m_camera->setOrientation(glm::vec3(angles.x, 0.0f, 0.0f));
 		}
 
 		GW::RenderEngine::SpotLight startLight = m_world->getLighting()->getSpotLights()[0];
-		startLight.position = camera->getPosition();
+		startLight.position = m_camera->getAbsolutePosition();
 		startLight.direction =  glm::rotate(glm::mat4(1.0f), glm::radians(angles.y), glm::vec3(0.0f, 1.0f, 0.0f)) *  glm::rotate(glm::mat4(1.0f), glm::radians(angles.x), glm::vec3(1.0f, 0.0f, 0.0f))* glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 		m_world->getLighting()->setSpotLight(0, startLight);
 
@@ -196,6 +199,8 @@ private:
 	bool m_mouseLocked = true;
 	ShaderProgram m_shader;
 	glm::vec3 angles;
+
+	std::unique_ptr<GW::RenderEngine::Camera> m_camera;
 
 	GW::StaticBlock* m_wall;
 };

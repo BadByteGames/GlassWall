@@ -214,28 +214,30 @@ void GW::RenderEngine::Model::draw()
 	glm::mat4 modelTransform = getTransform();
 
 	//set uniforms to proper values
-	if (modelUniform != -1) {
-		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelTransform));
-	}
+	if (m_world->getCamera() != nullptr) {
+		if (modelUniform != -1) {
+			glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelTransform));
+		}
 
-	if (viewUniform != -1) {
-		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getViewMatrix()));
-	}
+		if (viewUniform != -1) {
+			glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getViewMatrix()));
+		}
 
-	if (projectionUniform != -1) {
-		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix()));
-	}
+		if (projectionUniform != -1) {
+			glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix()));
+		}
 
-	if (mvpUniform != -1) {
-		glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * modelTransform));
-	}
+		if (mvpUniform != -1) {
+			glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, glm::value_ptr(m_world->getCamera()->getProjectionMatrix() * m_world->getCamera()->getViewMatrix() * modelTransform));
+		}
 
-	if (invertedModelUniform != -1) {
-		glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(modelTransform))));
-	}
+		if (invertedModelUniform != -1) {
+			glUniformMatrix4fv(invertedModelUniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(modelTransform))));
+		}
 
-	if (viewerPosUniform != -1) {
-		glUniform3fv(viewerPosUniform, 1, glm::value_ptr(m_world->getCamera()->getPosition()));
+		if (viewerPosUniform != -1) {
+			glUniform3fv(viewerPosUniform, 1, glm::value_ptr(m_world->getCamera()->getAbsolutePosition()));
+		}
 	}
 
 	//set all sampler2D values

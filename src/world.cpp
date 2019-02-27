@@ -17,7 +17,7 @@ using nlohmann::json;
 namespace GW {
 	World::World() : m_requestQuit(false), m_worldStarted(false), m_windowFlags(0)
 	{
-		m_camera = std::make_unique<RenderEngine::Camera>();
+		m_camera = nullptr;
 		m_lighting = std::make_unique<RenderEngine::Lighting>();
 		m_window = std::make_unique<RenderEngine::Window>();
 		m_inputManager = std::make_unique<InputManager>();
@@ -55,7 +55,6 @@ namespace GW {
 		//init glew
 		RenderEngine::initGL();
 
-		m_camera->setDimensions(1280, 720);
 		m_inputManager->setWindowDimensions(1280, 720);
 
 		//trigger all the entity world start events
@@ -171,7 +170,7 @@ namespace GW {
 
 	RenderEngine::Camera * World::getCamera()
 	{
-		return m_camera.get();
+		return m_camera;
 	}
 
 	InputManager * World::getInputManager()
@@ -348,6 +347,12 @@ namespace GW {
 				}
 			}
 		}
+	}
+
+	void World::useCamera(RenderEngine::Camera * camera)
+	{
+		m_camera = camera;
+		m_camera->setDimensions(1280, 720);
 	}
 
 	void World::update()
