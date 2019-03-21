@@ -1,0 +1,140 @@
+{
+	"materials":{
+		"floor":{
+			"texture":"Floor.png"
+		}
+	},
+	"shaders":{
+		"main":{
+			"vertex":"debug.vert",
+			"fragment":"debug.frag"
+		}
+	},
+	"blocks":[
+		{
+			"dims": {
+				"x":10.0,
+				"y":1.0,
+				"z":10.0
+			},
+			"position": {
+				"x":-5.0,
+				"y":-1.0,
+				"z":0.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		},
+		{
+			"dims": {
+				"x":10.0,
+				"y":1.0,
+				"z":10.0
+			},
+			"position": {
+				"x":-5.0,
+				"y":10.0,
+				"z":0.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		},
+		{
+			"dims": {
+				"x":1.0,
+				"y":10.0,
+				"z":10.0
+			},
+			"position": {
+				"x":-6.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		},
+		{
+			"dims": {
+				"x":1.0,
+				"y":10.0,
+				"z":10.0
+			},
+			"position": {
+				"x":5.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		},
+		{
+			"dims": {
+				"x":10.0,
+				"y":10.0,
+				"z":1.0
+			},
+			"position": {
+				"x":-5.0,
+				"y":0.0,
+				"z":-10.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		},
+		{
+			"dims": {
+				"x":10.0,
+				"y":10.0,
+				"z":1.0
+			},
+			"position": {
+				"x":-5.0,
+				"y":0.0,
+				"z":1.0
+			},
+			"orientation":{
+				"x":0.0,
+				"y":0.0,
+				"z":0.0
+			},
+			"material":"floor",
+			"shader":"main"
+		}
+	],
+	"entities":[
+		{
+			"type":"Monkey",
+			"name":"monkey_head",
+			"position":{
+				"x":0.0,
+				"y":1.0,
+				"z":-5.0
+			}
+		}
+	]
+}
